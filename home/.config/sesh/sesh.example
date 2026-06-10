@@ -23,6 +23,7 @@ top_cmd="just dev sync migrate"
 mid_cmd="just console"
 bot_cmd="just dev up -t"
 
+# --- layout (no need to edit below this line) -------------------------------
 # Build the right column. `-d` keeps focus here in the editor pane; panes are
 # targeted by id so this works even before the client finishes attaching.
 top=$(tmux split-window -h -d -l "$right_width" -c "$PWD" -P -F '#{pane_id}')

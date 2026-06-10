@@ -40,10 +40,10 @@ blacklist = ["^scratch$", "^_", '^~/\.config(?:/.*)?$']
 # default
 
 [default_session]
-# Per-project hook: if the project has a `.sesh` script, run it; otherwise open nvim.
-# `.sesh` is a shell script — you can `tmux split-window`, set up panes/windows,
-# launch dev servers, etc. See ~/.config/sesh/sesh.example for a template.
-startup_command = "if [ -f ./.sesh ]; then bash ./.sesh; else nvim .; fi"
+# Per-project hook: runs the project's `.sesh` script if present; in git repos
+# without one, offers to scaffold the editor + 3-pane template interactively;
+# otherwise opens nvim. See ~/.config/sesh/sesh-startup and sesh.example.
+startup_command = "bash $HOME/.config/sesh/sesh-startup"
 preview_command = "eza --all --git --icons --color=always {}"
 
 [[session]]
