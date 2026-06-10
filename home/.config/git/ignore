@@ -1,0 +1,7 @@
+# Global gitignore (~/.config/git/ignore is git's default excludesFile)
+
+# per-project sesh layout scripts
+.sesh
+
+# macOS
+.DS_Store
