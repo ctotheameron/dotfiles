@@ -114,7 +114,12 @@ main() {
   os="$(detect_os)"
 
   case "$os" in
-    macos) install_packages_macos ;;
+    macos)
+      install_packages_macos
+      # macOS-only configs (sketchybar, yabai, skhd, borders) — tracked for
+      # all machines, but only stowed on macOS
+      STOW_PACKAGES+=(macos)
+      ;;
     arch) install_packages_arch ;;
     *)
       echo "Unsupported OS. This script supports macOS and Arch/Omarchy." >&2

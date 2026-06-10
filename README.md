@@ -19,6 +19,8 @@ conflicting files to `~/.dotfiles-backup/`, and symlinks everything in
 
 ```
 home/              stow package mirroring $HOME (shared across OSes)
+macos/             stow package for macOS-only configs (sketchybar, yabai,
+                   skhd, borders) — only stowed on macOS
 packages/Brewfile  macOS packages (brew bundle dump)
 packages/arch.txt  Arch official repo packages
 packages/aur.txt   AUR packages

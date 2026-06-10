@@ -14,6 +14,7 @@ them.
 
 ```txt
 home/               stow package mirroring $HOME (the actual dotfiles)
+macos/              stow package for macOS-only configs (stowed on Darwin only)
 packages/Brewfile   macOS packages (brew bundle)
 packages/arch.txt   Arch official repo packages (pacman)
 packages/aur.txt    Arch AUR packages (yay/paru)
@@ -37,10 +38,10 @@ The owner runs macOS and Arch (Omarchy). Both must keep working.
   `$HOME`, and check directories exist before adding them to `fpath`/`PATH`.
 - Prefer cross-platform paths (e.g. `~/.1password/agent.sock`, which
   install.sh symlinks on macOS to match Linux).
-- macOS-only tools (yabai, skhd, sketchybar, borders, BTT) are intentionally
-  *not* in the `home/` package. If asked to track something macOS-only, keep
-  it isolated and flag the platform split rather than letting it leak into
-  shared config.
+- macOS-only configs (yabai, skhd, sketchybar, borders) live in the `macos/`
+  stow package, which install.sh only stows on Darwin. Track macOS-only
+  things there — never in `home/`, which must stay cross-platform. BTT is
+  the exception (preset exports in `btt/`, see below).
 - Paths that differ per OS and can't be unified get a comment noting the
   other OS's value (e.g. `op-ssh-sign` in `home/.gitconfig`) and can be
   overridden via the machine-local escape hatches (below).
