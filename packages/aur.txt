@@ -3,3 +3,5 @@
 asdf-vm
 sesh-bin
 opencode-bin
+graphite-cli
+1password-cli

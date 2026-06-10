@@ -6,6 +6,33 @@
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down", silent = true })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up", silent = true })
 
+-- Join lines without moving the cursor
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
+
+-- Keep cursor centered when half-page scrolling
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half-page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half-page up (centered)" })
+
+-- Keep search results centered with folds opened
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev search result (centered)" })
+
+-- Paste over selection without clobbering the yank register
+vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste (keep register)" })
+
+-- Yank to system clipboard
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to clipboard" })
+vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Yank line to clipboard" })
+
+-- Delete without yanking
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete (no yank)" })
+
+-- Make Ctrl-C behave like a real Escape in insert mode
+vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape" })
+
+-- Disable Ex mode
+vim.keymap.set("n", "Q", "<nop>", { desc = "Disabled (Ex mode)" })
+
 -- ⌘+j (ghostty sends Alt+j) → sesh session picker.
 -- Inside tmux this mapping is unreachable: tmux's root `M-j` binding catches
 -- the key before nvim sees it. This covers running nvim *outside* tmux —

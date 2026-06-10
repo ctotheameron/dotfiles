@@ -58,6 +58,19 @@ if command -v fzf >/dev/null; then
 fi
 command -v atuin >/dev/null && eval "$(atuin init zsh)"
 
+# 1Password CLI: completions + shell plugins (created by `op plugin init`).
+# Auth itself is per-machine: enable desktop-app integration in the 1Password
+# app (Settings → Developer → Integrate with 1Password CLI).
+if command -v op >/dev/null; then
+  eval "$(op completion zsh)"
+  compdef _op op
+  [ -f "$HOME/.config/op/plugins.sh" ] && source "$HOME/.config/op/plugins.sh"
+fi
+
+# Graphite CLI completions. Auth is per-machine: `gt auth` (token would
+# otherwise live in ~/.config/graphite/user_config — never commit that).
+command -v gt >/dev/null && eval "$(gt completion)"
+
 # Ghost-text suggestions from history (accept with →) and live command
 # syntax highlighting. Paths: Homebrew (macOS) and pacman (Arch).
 for _plugin_dir in /opt/homebrew/share /usr/share/zsh/plugins; do

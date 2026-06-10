@@ -25,6 +25,17 @@ packages/aur.txt   AUR packages
 install.sh         bootstrap script
 ```
 
+## One-time auth on a new machine
+
+Secrets are never tracked, so after `install.sh` run:
+
+- `gh auth login` — GitHub CLI (token lives in `~/.config/gh/hosts.yml`)
+- `gt auth` — Graphite (token lives in `~/.config/graphite/user_config`)
+- 1Password app → Settings → Developer → "Integrate with 1Password CLI",
+  then `op plugin init <tool>` for any shell plugins you want
+- `atuin import auto` — seed shell history (optionally `atuin login` for sync)
+- Recreate `~/.config/zsh/work.zsh` if it's a work machine
+
 ## BetterTouchTool (macOS)
 
 BTT stores config in versioned SQLite databases, so it can't be stowed.
