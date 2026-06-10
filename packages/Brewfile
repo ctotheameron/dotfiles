@@ -22,10 +22,10 @@ brew "lazygit"
 brew "libpq"
 brew "libyaml"
 brew "lua"
+brew "media-control"
 brew "mysql-client@8.0", link: true
 brew "neovim"
 brew "nginx"
-brew "nowplaying-cli"
 brew "tmux"
 brew "overmind"
 brew "postgresql@18", link: true

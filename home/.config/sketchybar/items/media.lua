@@ -4,12 +4,22 @@ local colors = require("colors")
 local whitelist = { ["Spotify"] = true,
                     ["Music"] = true    };
 
+-- macOS 15.4+ broke the built-in media_change event (MediaRemote lockdown).
+-- helpers/media_stream.sh streams updates from media-control and fires this
+-- custom event instead.
+sbar.add("event", "media_update")
+
+local config_dir = os.getenv("CONFIG_DIR") or (os.getenv("HOME") .. "/.config/sketchybar")
+local stream_script = config_dir .. "/helpers/media_stream.sh"
+sbar.exec("pkill -f 'helpers/media_stream.sh' >/dev/null 2>&1; (nohup '" .. stream_script .. "' >/dev/null 2>&1 &)")
+
 local media_cover = sbar.add("item", {
   position = "right",
   background = {
     image = {
-      string = "media.artwork",
-      scale = 0.85,
+      -- Artwork thumbnails are 128px (see helpers/media_stream.sh); draw at ~26pt
+      scale = 0.2,
+      corner_radius = 9,
     },
     color = colors.transparent,
   },
@@ -53,23 +63,25 @@ local media_title = sbar.add("item", {
   },
 })
 
+local media_control = "/opt/homebrew/bin/media-control"
+
 sbar.add("item", {
   position = "popup." .. media_cover.name,
   icon = { string = icons.media.back },
   label = { drawing = false },
-  click_script = "nowplaying-cli previous",
+  click_script = media_control .. " previous-track",
 })
 sbar.add("item", {
   position = "popup." .. media_cover.name,
   icon = { string = icons.media.play_pause },
   label = { drawing = false },
-  click_script = "nowplaying-cli togglePlayPause",
+  click_script = media_control .. " toggle-play-pause",
 })
 sbar.add("item", {
   position = "popup." .. media_cover.name,
   icon = { string = icons.media.forward },
   label = { drawing = false },
-  click_script = "nowplaying-cli next",
+  click_script = media_control .. " next-track",
 })
 
 local interrupt = 0
@@ -83,20 +95,21 @@ local function animate_detail(detail)
   end)
 end
 
-media_cover:subscribe("media_change", function(env)
-  if whitelist[env.INFO.app] then
-    local drawing = (env.INFO.state == "playing")
-    media_artist:set({ drawing = drawing, label = env.INFO.artist, })
-    media_title:set({ drawing = drawing, label = env.INFO.title, })
-    media_cover:set({ drawing = drawing })
+media_cover:subscribe("media_update", function(env)
+  local drawing = (whitelist[env.APP] ~= nil) and (env.STATE == "playing")
+  media_artist:set({ drawing = drawing, label = env.ARTIST, })
+  media_title:set({ drawing = drawing, label = env.TITLE, })
+  media_cover:set({
+    drawing = drawing,
+    background = { image = (env.ARTWORK ~= "") and env.ARTWORK or nil },
+  })
 
-    if drawing then
-      animate_detail(true)
-      interrupt = interrupt + 1
-      sbar.delay(5, animate_detail)
-    else
-      media_cover:set({ popup = { drawing = false } })
-    end
+  if drawing then
+    animate_detail(true)
+    interrupt = interrupt + 1
+    sbar.delay(5, animate_detail)
+  else
+    media_cover:set({ popup = { drawing = false } })
   end
 end)
 
