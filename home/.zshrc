@@ -14,10 +14,16 @@ setopt share_history hist_ignore_dups hist_ignore_space hist_verify
 
 # --- Aliases --------------------------------------------------------------
 alias vim="nvim"
+command -v bat >/dev/null && alias cat='bat'
 if command -v zoxide >/dev/null; then
   alias cd='z'
   eval "$(zoxide init zsh)"
 fi
+
+# --- Tool integrations -----------------------------------------------------
+# fzf first (ctrl-t files, alt-c dirs), then atuin so it wins ctrl-r history
+command -v fzf >/dev/null && source <(fzf --zsh)
+command -v atuin >/dev/null && eval "$(atuin init zsh)"
 
 # --- PATH / tooling -------------------------------------------------------
 export PATH="$HOME/.asdf/shims:$PATH"
