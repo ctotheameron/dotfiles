@@ -1,6 +1,7 @@
 {
   "BTTPresetName" : "Default",
-  "BTTPresetUUID" : "09239362-31EE-4182-9757-B2125A0D46BD",
+  "BTTPresetColor" : "181.050000, 141.400050, 48.883500, 255.000000",
+  "BTTPresetUUID" : "279DD876-FB8E-483D-B45E-49235D3513AB",
   "BTTPresetContent" : [
     {
       "BTTAppBundleIdentifier" : "BT.G",
@@ -8,22 +9,22 @@
       "BTTAppAutoInvertIcon" : 1,
       "BTTTriggers" : [
         {
-          "BTTLastUpdatedAt" : 1781058244.891355,
-          "BTTTriggerType" : 103,
+          "BTTLastUpdatedAt" : 1781058419.22159,
+          "BTTTriggerType" : 12,
           "BTTTriggerTypeDescription" : "3 Finger Swipe Down",
-          "BTTTriggerClass" : "BTTTriggerTypeTouchpadAll",
-          "BTTUUID" : "4E8ABCA4-5121-4A80-8E9A-217406305E0D",
+          "BTTTriggerClass" : "BTTTriggerTypeMagicMouse",
+          "BTTUUID" : "6F898B4E-AACC-4EE4-9F3A-B2CBA1A63B6A",
           "BTTPredefinedActionType" : 45,
           "BTTPredefinedActionName" : "Show Desktop",
           "BTTOrder" : 1,
           "BTTGestureNotes" : "3 Finger Swipe Down"
         },
         {
-          "BTTLastUpdatedAt" : 1781058244.796874,
-          "BTTTriggerType" : 102,
+          "BTTLastUpdatedAt" : 1781058419.1283751,
+          "BTTTriggerType" : 13,
           "BTTTriggerTypeDescription" : "3 Finger Swipe Up",
-          "BTTTriggerClass" : "BTTTriggerTypeTouchpadAll",
-          "BTTUUID" : "9759B318-4039-4B20-913A-70A29D31FC5D",
+          "BTTTriggerClass" : "BTTTriggerTypeMagicMouse",
+          "BTTUUID" : "18EF29EB-3F40-441B-B392-1267C7ED465D",
           "BTTPredefinedActionType" : 45,
           "BTTPredefinedActionName" : "Show Desktop",
           "BTTOrder" : 0,
