@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
 # Bootstrap a new machine:
-#   git clone git@github.com:<you>/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
+#   git clone git@github.com:ctotheameron/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
 #
-# Detects macOS vs Arch/Omarchy and uses the appropriate package manager,
+# Detects macOS vs Arch and uses the appropriate package manager,
 # then symlinks configs into $HOME with GNU Stow.
 
 set -euo pipefail
@@ -18,18 +18,21 @@ log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 # ---------------------------------------------------------------------------
 detect_os() {
   case "$(uname -s)" in
-    Darwin) echo macos ;;
-    Linux)
-      if [ -r /etc/os-release ]; then
-        # shellcheck disable=SC1091
-        . /etc/os-release
-        case "${ID:-}${ID_LIKE:-}" in
-          *arch*) echo arch; return ;;
-        esac
-      fi
-      echo unsupported
-      ;;
-    *) echo unsupported ;;
+  Darwin) echo macos ;;
+  Linux)
+    if [ -r /etc/os-release ]; then
+      # shellcheck disable=SC1091
+      . /etc/os-release
+      case "${ID:-}${ID_LIKE:-}" in
+      *arch*)
+        echo arch
+        return
+        ;;
+      esac
+    fi
+    echo unsupported
+    ;;
+  *) echo unsupported ;;
   esac
 }
 
@@ -114,17 +117,17 @@ main() {
   os="$(detect_os)"
 
   case "$os" in
-    macos)
-      install_packages_macos
-      # macOS-only configs (sketchybar, yabai, skhd, borders) — tracked for
-      # all machines, but only stowed on macOS
-      STOW_PACKAGES+=(macos)
-      ;;
-    arch) install_packages_arch ;;
-    *)
-      echo "Unsupported OS. This script supports macOS and Arch/Omarchy." >&2
-      exit 1
-      ;;
+  macos)
+    install_packages_macos
+    # macOS-only configs (sketchybar, yabai, skhd, borders) — tracked for
+    # all machines, but only stowed on macOS
+    STOW_PACKAGES+=(macos)
+    ;;
+  arch) install_packages_arch ;;
+  *)
+    echo "Unsupported OS. This script supports macOS and Arch." >&2
+    exit 1
+    ;;
   esac
 
   stow_packages
