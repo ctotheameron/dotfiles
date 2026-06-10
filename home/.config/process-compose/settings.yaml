@@ -1,0 +1,3 @@
+# TUI state — process-compose auto-saves theme/sort changes here.
+# "Custom Style" = ./theme.yaml (Catppuccin Mocha)
+theme: Custom Style
