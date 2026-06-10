@@ -7,9 +7,7 @@ return {
   },
   {
     "nvim-mini/mini.files",
-    opts = {
-      -- Your custom mini.files options go here if needed
-    },
+    opts = {},
     keys = {
       {
         "-",

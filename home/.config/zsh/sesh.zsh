@@ -4,6 +4,7 @@ function _sesh_picker() {
   emulate -L zsh
   local session
   session=$(sesh list --icons --hide-duplicates | fzf \
+    --ansi \
     --height 60% --reverse \
     --no-sort --prompt '⚡  ' \
     --bind 'tab:down,btab:up' \

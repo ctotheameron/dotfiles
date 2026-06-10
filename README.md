@@ -6,7 +6,7 @@ macOS (Homebrew) and Arch/Omarchy (pacman + AUR).
 ## New machine
 
 ```sh
-git clone git@github.com:<you>/dotfiles.git ~/dotfiles
+git clone git@github.com:ctotheameron/dotfiles.git ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
@@ -24,6 +24,15 @@ packages/arch.txt  Arch official repo packages
 packages/aur.txt   AUR packages
 install.sh         bootstrap script
 ```
+
+## BetterTouchTool (macOS)
+
+BTT stores config in versioned SQLite databases, so it can't be stowed.
+Instead, presets are exported as JSON into `btt/`:
+
+- After changing BTT config: `scripts/export-btt.sh`, then commit.
+- On a new machine (after `brew bundle` installs BTT): `open btt/*.bttpreset`
+  and confirm the import prompt.
 
 ## Day-to-day
 
