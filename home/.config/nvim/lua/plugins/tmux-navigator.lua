@@ -15,7 +15,11 @@ return {
     { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate left (nvim/tmux)" },
     { "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Navigate down (nvim/tmux)" },
     { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate up (nvim/tmux)" },
-    { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate right (nvim/tmux)" },
+    -- mode "t" so the rightward tmux handoff also works from terminal
+    -- buffers, which otherwise swallow the key. Only <C-l> needs this:
+    -- terminals sit at the right edge in this layout, and the other
+    -- directions land on regular nvim windows.
+    { "<C-l>", "<cmd>TmuxNavigateRight<cr>", mode = { "n", "t" }, desc = "Navigate right (nvim/tmux)" },
     { "<C-\\>", "<cmd>TmuxNavigatePrevious<cr>", desc = "Navigate to previous pane" },
   },
 }

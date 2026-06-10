@@ -26,8 +26,8 @@ window-theme = auto
 ## UI / visuals
 ################
 theme = Catppuccin Mocha
-background-opacity = 0.85
-background-blur-radius = 40
+background-opacity = 0.80
+background-blur-radius = 20
 bold-is-bright = true
 mouse-hide-while-typing = true
 window-padding-balance = true
@@ -110,7 +110,6 @@ keybind = super+l=text:\x02\x4c
 # ⌘N → prefix+% : tmux vertical split ("new pane")
 keybind = super+n=text:\x02\x25
 
-#
 # ⌘O → prefix+u : tmux-fzf-url — pick & open a URL from the scrollback
 # keybind = super+o=text:\x02\x75
 #
