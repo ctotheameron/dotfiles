@@ -1,6 +1,9 @@
 # Tool replacements & integrations. Everything is guarded so the shell
 # works on a fresh machine before packages are installed.
 
+# nvim > vim
+command -v nvim >/dev/null && alias vim='nvim'
+
 # bat > cat
 command -v bat >/dev/null && alias cat='bat'
 
