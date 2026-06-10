@@ -7,65 +7,83 @@
 # ╚██████╔╝██║  ██║╚██████╔╝███████║   ██║      ██║      ██║
 #  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝      ╚═╝      ╚═╝
 #
-# Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
+# Ghostty is a fast, feature-rich, and cross-platform terminal emulator that
+# uses platform-native UI and GPU acceleration.
 # https://ghostty.org/docs/config/reference
 
 title = Ghostty
 
-
+###################
+## Window / macOS #
+###################
 macos-titlebar-style = hidden
+macos-window-shadow = false
+window-decoration = false
 window-save-state = always
 window-theme = auto
 
-#################
-## UI / window ##
-#################
+################
+## UI / visuals
+################
+theme = Catppuccin Mocha
 background-opacity = 0.85
 background-blur-radius = 40
 bold-is-bright = true
-macos-window-shadow = false
 mouse-hide-while-typing = true
-window-decoration = false
 window-padding-balance = true
-window-padding-x = 20
-window-padding-y = 20
-
-# visuals
-font-family = "Liga SFMono Nerd Font"
-font-size = 16 
-# fallback (not needed?)
-# font-family = "Symbols Nerd F Mono"
-
-macos-window-shadow = false
-mouse-hide-while-typing = true
-theme = Catppuccin Mocha
-window-decoration = false
 window-padding-x = 16
 window-padding-y = 10
 
+font-family = "Liga SFMono Nerd Font"
+font-size = 16
+# Fallback for icons/symbols — ghostty usually finds these automatically,
+# only uncomment if glyphs render as boxes:
+# font-family = "Symbols Nerd F Mono"
+
 ####################
-## quick terminal ##
+## Quick terminal ##
 ####################
+# ⌘+/ drops a terminal down from the top of the screen (like iTerm hotkey window)
 keybind = super+slash=toggle_quick_terminal
 quick-terminal-position = top
 
 ###############
-## clipboard ##
+## Clipboard ##
 ###############
 clipboard-read = "allow"
-clipboard-trim-trailing-spaces = true
 clipboard-write = "allow"
+clipboard-trim-trailing-spaces = true
 
 #################
-## keybindings ##
+## Keybindings ##
 #################
-# Some useful encoded characters:
-# \x0a = Enter/Return
-# \x1b = Esc
-# \x02 = <C-b> (tmux prefix)
+# Make left Option behave as Alt so terminal apps receive M-<key> sequences
 macos-option-as-alt = true
 
+# --- How the `text:` bindings below work -----------------------------------
+#
+# `keybind = super+X=text:...` makes ⌘+X type a raw byte sequence into the
+# terminal. This lets macOS-native shortcuts drive tmux and neovim:
+#
+#   \x02  = Ctrl-B        → the tmux prefix; \x02 followed by a letter is
+#                           "prefix+letter", i.e. a tmux binding (see
+#                           ~/.config/tmux/tmux.conf for what each one does)
+#   \x3a  = ":"           → starts a vim/neovim command; the bytes after it
+#                           spell out the command, ending with \x0a (Enter)
+#   \x0a  = Enter/Return
+#   \x1b  = Escape        → \x1b followed by a letter is "Alt+letter" (M-key)
+#
+# e.g. super+t=text:\x02\x63 means: ⌘T sends prefix+c → tmux opens a new
+# window — so ⌘T "opens a tab" just like a native mac app.
+# ----------------------------------------------------------------------------
 
+# ⌘+j → sends Alt+j; caught by tmux (M-j binding) inside tmux, or by the zsh
+# _sesh_picker widget outside tmux. Either way: opens the sesh session picker.
+keybind = super+j=text:\x1bj
+
+# --- ⌘+1-9 → tmux window switching (prefix+1..9) ---------------------------
+# "physical:" means the physical key position, so it works on any keyboard
+# layout. Uncomment to make ⌘+number jump to that tmux window:
 # keybind = super+physical:one=text:\x021
 # keybind = super+physical:two=text:\x022
 # keybind = super+physical:three=text:\x023
@@ -75,99 +93,75 @@ macos-option-as-alt = true
 # keybind = super+physical:seven=text:\x027
 # keybind = super+physical:eight=text:\x028
 # keybind = super+physical:nine=text:\x029
-#
+
+# --- ⌘+letter → tmux / neovim actions ---------------------------------------
+# ⌘C → prefix+[ : enter tmux copy mode (WARNING: shadows native copy;
+#                 you'd copy with `y` in copy-mode instead)
 # keybind = super+c=text:\x02[
+#
+# ⌘F → types ":Grep<Enter>" in neovim: project-wide search
+#      (\x47\x72\x65\x70 = "Grep")
 # keybind = super+f=text:\x3a\x47\x72\x65\x70\x0a
+#
+# ⌘G → prefix+g : tmux opens a lazygit window (tmux.conf: bind g)
 # keybind = super+g=text:\x02\x67
+#
+# ⌘K → prefix+K : tmux sesh picker popup (tmux.conf: bind K)
 # keybind = super+k=text:\x02\x4b
+#
+# ⌘L → prefix+L : switch to last sesh session (tmux.conf: bind L)
 # keybind = super+l=text:\x02\x4c
+#
+# ⌘N → prefix+% : tmux vertical split ("new pane")
 # keybind = super+n=text:\x02\x25
+#
+# ⌘O → prefix+u : tmux-fzf-url — pick & open a URL from the scrollback
 # keybind = super+o=text:\x02\x75
+#
+# ⌘P → types ":GoToFile<Enter>" in neovim: fuzzy file picker (like VS Code ⌘P)
 # keybind = super+p=text:\x3a\x47\x6f\x54\x6f\x46\x69\x6c\x65\x0a
+#
+# ⌘Q → types ":" Esc Esc ":qa!<Enter>" in neovim: force-quit all buffers
+#      (the Esc Esc first guarantees normal mode; shadows native Quit!)
 # keybind = super+q=text:\x3a\x1b\x1b\x3a\x71\x61\x21\x0a
+#
+# ⌘R → reload this ghostty config in place
 # keybind = super+r=reload_config
+#
+# ⌘S → types ":w<Enter>" in neovim: save buffer (native-feeling ⌘S)
 # keybind = super+s=text:\x3a\x77\x0a
+#
+# ⌘T → prefix+c : new tmux window (native-feeling "new tab")
 # keybind = super+t=text:\x02\x63
+#
+# ⌘W → prefix+x : kill current tmux pane (native-feeling "close tab";
+#                 tmux.conf binds x without the y/n confirm prompt)
 # keybind = super+w=text:\x02\x78
 
-# switch to window by index (1-based)
-# a-z
-# select all?
-# keybind = super+a= 
-# build?
-# keybind = super+b= 
-# copy
-# Change to tmux copy mode
-# keybind = super+d=
-# keybind = super+e=
-# :Grep (find)
-# <perfix>+g (open lazygit window)
-# hide?
-# keybind = super+h= 
-# keybind = super+i=
-# cmd+j → Alt+j; caught by tmux (M-j) when inside tmux, by zsh widget when outside
-keybind = super+j=text:\x1bj
-# <perfix>+k (open sesh picker)
-# <perfix>+l (switch to last session)
-# minimize?
-# keybind = super+m= 
-# new?
-# <perfix>+u (open url)
-# :GotoFile
-# :qa!
-# :w (write buffer)
-# <perfix>+c (new window)
-# keybind = super+u=
-# paste
-# keybind = super+v= 
-# <perfix>+x (close window)
-# cut
-# keybind = super+x= 
-# keybind = super+y=
-# undo?
-# keybind = super+z= 
-
+# --- ⌘+Shift+letter ----------------------------------------------------------
+# ⌘⇧K → prefix+R : sesh root-session picker (tmux.conf: bind R)
 # keybind = super+shift+k=text:\x02\x52
+#
+# ⌘⇧O → types ":GoToSymbol<Enter>" in neovim: symbol picker (like VS Code ⌘⇧O)
 # keybind = super+shift+o=text:\x3a\x47\x6f\x54\x6f\x53\x79\x6d\x62\x6f\x6c\x0a
+#
+# ⌘⇧P → types ":GoToCommand<Enter>" in neovim: command palette (like VS Code ⌘⇧P)
 # keybind = super+shift+p=text:\x3a\x47\x6f\x54\x6f\x43\x6f\x6d\x6d\x61\x6e\x64\x0a
 
-# A-Z
-# keybind = super+shift+a=
-# keybind = super+shift+b=
-# keybind = super+shift+c=
-# keybind = super+shift+d=
-# keybind = super+shift+e=
-# keybind = super+shift+f=
-# keybind = super+shift+g=
-# keybind = super+shift+h=
-# keybind = super+shift+i=
-# secondary sesh
-# keybind = super+shift+j=
-# keybind = super+shift+l=
-# keybind = super+shift+m=
-# keybind = super+shift+n=
-# :GotoSymbol
-# :GotoCommand
-# keybind = super+shift+q=
-# keybind = super+shift+r=
-# keybind = super+shift+s=
-# keybind = super+shift+t=
-# keybind = super+shift+u=
-# keybind = super+shift+v=
-# keybind = super+shift+w= (undo close?)
-# keybind = super+shift+x=
-# keybind = super+shift+y=
-# keybind = super+shift+z= (redo?)
-
-# keybind = super+right_bracket=text:<C-o>
-# keybind = super+left_bracket=text:<C-i>
+# --- ⌘+brackets → navigation -------------------------------------------------
+# ⌘] / ⌘[ → intended as vim jumplist forward/back (Ctrl-O / Ctrl-I), but
+# "text:<C-o>" types those 5 literal characters — it does NOT send Ctrl-O.
+# The working versions would be: \x0f (Ctrl-O) and \x09 (Ctrl-I/Tab):
+# keybind = super+right_bracket=text:\x0f
+# keybind = super+left_bracket=text:\x09
 #
+# ⌘⇧[ / ⌘⇧] → prefix+n / prefix+p : next / previous tmux window
 # keybind = super+shift+left_bracket=text:\x02\x6e
 # keybind = super+shift+right_bracket=text:\x02\x70
 
-# special characters
-# jump forward
-# jump back
-# special characters (shift)
-# <perfix>+n (next window)
-# <perfix>+p (previous window)
+# --- Free keys (ideas from the original author, nothing bound) --------------
+# super+a (select all?)   super+b (build?)      super+d   super+e
+# super+h (hide?)         super+i               super+m (minimize?)
+# super+u                 super+v (paste)       super+x (cut)
+# super+y                 super+z (undo?)       super+shift+j (secondary sesh)
+# super+shift+w (undo close?)                   super+shift+z (redo?)

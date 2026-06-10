@@ -25,5 +25,45 @@ fi
 command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 
 # fzf first (ctrl-t files, alt-c dirs), then atuin so it wins ctrl-r history
-command -v fzf >/dev/null && source <(fzf --zsh)
+if command -v fzf >/dev/null; then
+  source <(fzf --zsh)
+
+  # Use fd for all fzf listings: faster, respects .gitignore, includes hidden
+  if command -v fd >/dev/null; then
+    export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+    # fd also powers fuzzy path/dir completion (e.g. `cd **<Tab>`)
+    _fzf_compgen_path() { fd --hidden --exclude .git . "$1"; }
+    _fzf_compgen_dir() { fd --type=d --hidden --exclude .git . "$1"; }
+  fi
+
+  # Previews: bat for files, eza tree for directories
+  _fzf_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
+  export FZF_CTRL_T_OPTS="--preview '$_fzf_preview'"
+  export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+  # Context-aware previews for ** completion (cd shows tree, ssh shows dig)
+  _fzf_comprun() {
+    local command=$1
+    shift
+    case "$command" in
+      cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+      export|unset) fzf --preview "eval 'echo \${}'" "$@" ;;
+      ssh)          fzf --preview 'dig {}' "$@" ;;
+      *)            fzf --preview "$_fzf_preview" "$@" ;;
+    esac
+  }
+fi
 command -v atuin >/dev/null && eval "$(atuin init zsh)"
+
+# Ghost-text suggestions from history (accept with →) and live command
+# syntax highlighting. Paths: Homebrew (macOS) and pacman (Arch).
+for _plugin_dir in /opt/homebrew/share /usr/share/zsh/plugins; do
+  [ -f "$_plugin_dir/zsh-autosuggestions/zsh-autosuggestions.zsh" ] &&
+    source "$_plugin_dir/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  [ -f "$_plugin_dir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] &&
+    source "$_plugin_dir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+done
+unset _plugin_dir
