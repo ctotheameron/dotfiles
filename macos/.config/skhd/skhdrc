@@ -70,8 +70,10 @@ shift + alt - n : yabai -m space --create && \
                    yabai -m window --space "${index}" && \
                    yabai -m space --focus "${index}"
 
-# destroy current desktop
-shift + alt - q : yabai -m space --destroy
+# destroy current desktop and focus the next lower desktop
+shift + alt - q : index="$(yabai -m query --spaces --space | jq '.index')" && \
+                   yabai -m space --destroy && \
+                   yabai -m space --focus "$((index > 1 ? index - 1 : 1))"
 
 # fast focus desktop
 alt - 0 : yabai -m space --focus recent
