@@ -1,12 +1,10 @@
 # --- Completions ---------------------------------------------------------
-# (previously handled by oh-my-zsh)
 [ -d /opt/homebrew/share/zsh/site-functions ] && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 autoload -Uz compinit && compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # case-insensitive
 
 # --- History --------------------------------------------------------------
-# (previously handled by oh-my-zsh)
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
