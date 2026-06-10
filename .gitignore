@@ -3,5 +3,8 @@
 # Never commit credentials
 home/.config/gh/hosts.yml
 
+# Work-specific config stays local
+home/.config/zsh/work.zsh
+
 # opencode installs these locally from package.json
 home/.config/opencode/node_modules/
