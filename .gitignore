@@ -8,3 +8,6 @@ home/.config/zsh/work.zsh
 
 # opencode installs these locally from package.json
 home/.config/opencode/node_modules/
+
+# tpm manages these clones; tpm install_plugins restores them
+home/.config/tmux/plugins/
