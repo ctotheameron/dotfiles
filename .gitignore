@@ -11,5 +11,8 @@ packages/Brewfile.local
 # opencode installs these locally from package.json
 home/.config/opencode/node_modules/
 
+# lazygit machine-local state (recent repos, window state)
+home/.config/lazygit/state.yml
+
 # tpm manages these clones; tpm install_plugins restores them
 home/.config/tmux/plugins/
