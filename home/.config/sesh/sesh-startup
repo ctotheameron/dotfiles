@@ -4,16 +4,23 @@
 #   1. If the project has a `.sesh` script, run it.
 #   2. Otherwise, in git repos, offer to scaffold one from sesh.example —
 #      prompting for the three right-side pane commands (top to bottom).
-#   3. Otherwise (or on decline), just open nvim.
+#      Declining is remembered (per repo, in $DECLINED) and never asks again.
+#   3. Otherwise, just open nvim.
+#
+# To make a repo prompt again: remove its line from $DECLINED.
 set -u
 
 TEMPLATE="$HOME/.config/sesh/sesh.example"
+DECLINED="${XDG_STATE_HOME:-$HOME/.local/state}/sesh/declined"
 
 if [ -f ./.sesh ]; then
   exec bash ./.sesh
 fi
 
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1 && [ -f "$TEMPLATE" ]; then
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+
+if [ -n "$repo_root" ] && [ -f "$TEMPLATE" ] &&
+  ! grep -qxF "$repo_root" "$DECLINED" 2>/dev/null; then
   printf 'No .sesh in this repo. Scaffold the editor + 3-pane template? [y/N] '
   read -r reply
   if [[ "$reply" == [Yy]* ]]; then
@@ -34,6 +41,10 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1 && [ -f "$TEMPLATE" ]; th
     } >.sesh
     chmod +x .sesh
     exec bash ./.sesh
+  else
+    # Remember the decline so this repo never prompts again
+    mkdir -p "$(dirname "$DECLINED")"
+    printf '%s\n' "$repo_root" >>"$DECLINED"
   fi
 fi
 
