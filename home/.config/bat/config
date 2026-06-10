@@ -1,0 +1,4 @@
+# bat configuration — https://github.com/sharkdp/bat
+# Theme lives in ./themes; run `bat cache --build` once after changes
+# (install.sh handles this on new machines).
+--theme="Catppuccin Mocha"

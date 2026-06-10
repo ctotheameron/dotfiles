@@ -117,6 +117,10 @@ main() {
   esac
 
   stow_packages
+
+  # Build bat's theme cache so custom themes (Catppuccin) are available
+  command -v bat >/dev/null && bat cache --build >/dev/null
+
   log "Done. Restart your shell."
 }
 
