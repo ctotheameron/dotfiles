@@ -4,6 +4,7 @@ atuin
 aws-cli
 bat
 direnv
+eza
 fd
 fzf
 ghostty

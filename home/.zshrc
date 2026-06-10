@@ -15,6 +15,12 @@ setopt share_history hist_ignore_dups hist_ignore_space hist_verify
 # --- Aliases --------------------------------------------------------------
 alias vim="nvim"
 command -v bat >/dev/null && alias cat='bat'
+if command -v eza >/dev/null; then
+  alias ls='eza --group-directories-first --icons=auto'
+  alias ll='eza -l --group-directories-first --icons=auto --git'
+  alias la='eza -la --group-directories-first --icons=auto --git'
+  alias tree='eza --tree --icons=auto'
+fi
 if command -v zoxide >/dev/null; then
   alias cd='z'
   eval "$(zoxide init zsh)"
