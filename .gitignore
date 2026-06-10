@@ -1,0 +1,7 @@
+.DS_Store
+
+# Never commit credentials
+home/.config/gh/hosts.yml
+
+# opencode installs these locally from package.json
+home/.config/opencode/node_modules/

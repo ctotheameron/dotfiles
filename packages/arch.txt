@@ -1,0 +1,20 @@
+# Official repo packages (pacman) — cross-platform equivalents of the Brewfile.
+# Lines starting with # are ignored.
+atuin
+aws-cli
+bat
+direnv
+fd
+fzf
+ghostty
+git
+github-cli
+go
+jq
+kubectl
+lazygit
+neovim
+starship
+stow
+tmux
+zoxide

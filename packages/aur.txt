@@ -1,0 +1,5 @@
+# AUR packages (installed with yay/paru if available).
+# Lines starting with # are ignored.
+asdf-vm
+sesh-bin
+opencode-bin

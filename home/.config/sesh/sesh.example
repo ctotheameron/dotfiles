@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Drop this file at the root of a project as `.sesh` to customize how
+# `sesh connect <project>` lays out its tmux session.
+#
+# This script runs in the session's first window after sesh attaches.
+# cwd is the project root. $TMUX is set, so `tmux ...` commands target
+# the current session.
+#
+# Without this file, sesh falls back to `nvim .` (see sesh.toml).
+
+# --- minimal: just open nvim ---
+nvim .
+
+# --- richer example (uncomment to use) ---
+# Rename the first window and split it: editor on the left (70%),
+# a shell on the right (30%).
+#
+# tmux rename-window 'edit'
+# tmux split-window -h -p 30 -c "$PWD"
+# tmux select-pane -L
+#
+# Add a second window running the dev server.
+# tmux new-window -n 'dev' -c "$PWD" 'npm run dev'
+#
+# Add a third window with lazygit.
+# tmux new-window -n 'git' -c "$PWD" 'lazygit'
+#
+# Jump back to the editor before handing off.
+# tmux select-window -t 'edit'
+# nvim .

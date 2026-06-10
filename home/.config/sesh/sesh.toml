@@ -1,0 +1,81 @@
+# ███████╗███████╗███████╗██╗  ██╗     ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗ 
+# ██╔════╝██╔════╝██╔════╝██║  ██║    ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝ 
+# ███████╗█████╗  ███████╗███████║    ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+# ╚════██║██╔══╝  ╚════██║██╔══██║    ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+# ███████║███████╗███████║██║  ██║    ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+# ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ 
+#
+# Smart session manager for the terminal
+# https://github.com/joshmedeski/sesh
+
+strict_mode = false
+cache = false
+separator_aware = true
+dir_length = 2
+# git_namer_use_worktree_root = true
+# git_dir_length = 2
+
+[tui]
+show_icons = true
+prompt = "🌲"
+placeholder = "Pick a seshhhhh"
+
+# sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
+# sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
+# blacklist_sources = ["tmux", "zoxide"]
+
+# projects
+# project_roots = ["~/c"]
+# max_depth = 2
+# sort_order = ["tmux", "projects"]
+
+# [marker]
+# inactivity_threshold = 10    # Seconds before alerts start
+# alert_level_1_time = 60      # Light alert duration
+# alert_level_2_time = 300     # Medium alert duration
+# alert_level_3_time = 600     # Urgent alert duration
+
+blacklist = ["^scratch$", "^_", '^~/\.config(?:/.*)?$']
+
+# default
+
+[default_session]
+# Per-project hook: if the project has a `.sesh` script, run it; otherwise open nvim.
+# `.sesh` is a shell script — you can `tmux split-window`, set up panes/windows,
+# launch dev servers, etc. See ~/.config/sesh/sesh.example for a template.
+startup_command = "if [ -f ./.sesh ]; then bash ./.sesh; else nvim .; fi"
+preview_command = "eza --all --git --icons --color=always {}"
+
+[[session]]
+name = "exit immediately"
+path = "~"
+startup_command = "exit"
+
+[[session]]
+name = "home"
+path = "~"
+windows = []
+
+# configs
+
+[[session]]
+name = "dotfiles"
+path = "~/.config"
+
+[[session]]
+name = "sesh config"
+path = "$HOME/.config/sesh"
+startup_command = "nvim sesh.toml"
+preview_command = "bat --language=toml --style=snip --color=always $HOME/c/dotfiles/.config/sesh/sesh.toml"
+
+[[session]]
+name = "tmux config"
+path = "~/c/dotfiles/.config/tmux"
+startup_command = "nvim tmux.conf"
+preview_command = "bat --language=bash --style=snip --color=always ~/c/dotfiles/.config/tmux/tmux.conf"
+
+[[session]]
+name = "ghostty config"
+path = "~/.config/ghostty"
+startup_command = "nvim config"
+
