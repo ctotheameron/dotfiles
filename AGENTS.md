@@ -12,7 +12,7 @@ in this repo** — expect `git status` to pick up ride-along changes the user
 made between requests. Don't be surprised by them, and don't silently revert
 them.
 
-```
+```txt
 home/               stow package mirroring $HOME (the actual dotfiles)
 packages/Brewfile   macOS packages (brew bundle)
 packages/arch.txt   Arch official repo packages (pacman)
@@ -23,8 +23,7 @@ install.sh          bootstrap: detects OS, installs packages, stows, post-setup
 .stowrc             makes plain `stow home` target $HOME
 ```
 
-The owner runs macOS today and is building an Arch (Omarchy) machine. Both
-must keep working.
+The owner runs macOS and Arch (Omarchy). Both must keep working.
 
 ## Rules for every change
 
