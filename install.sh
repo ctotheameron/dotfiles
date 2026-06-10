@@ -133,6 +133,13 @@ main() {
     mkdir -p "$HOME/.1password"
     ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" \
       "$HOME/.1password/agent.sock"
+
+    # process-compose reads Application Support on macOS (no ~/.config
+    # fallback); point it at the stowed XDG-style config instead. Replace
+    # any real dir process-compose may have auto-created (ln won't).
+    pc_dir="$HOME/Library/Application Support/process-compose"
+    [ -L "$pc_dir" ] || rm -rf "$pc_dir"
+    ln -sfn "$HOME/.config/process-compose" "$pc_dir"
   fi
 
   log "Done. Restart your shell."
