@@ -12,7 +12,8 @@
 	allowedSignersFile = ~/.config/git/allowed_signers
 
 [commit]
-	gpgsign = true
+	# TODO: flip to true once 1Password SSH agent + signing keys are set up
+	gpgsign = false
 
 # Machine-local overrides (untracked; optional). Work identity, work-org
 # includeIf/insteadOf rules, etc. live here — keep them out of this repo.
