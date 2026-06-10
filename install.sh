@@ -45,6 +45,12 @@ install_packages_macos() {
 
   log "Installing packages from Brewfile"
   brew bundle --file "$DOTFILES_DIR/packages/Brewfile"
+
+  # Machine-local packages (work tooling etc.) — untracked, optional
+  if [ -f "$DOTFILES_DIR/packages/Brewfile.local" ]; then
+    log "Installing packages from Brewfile.local"
+    brew bundle --file "$DOTFILES_DIR/packages/Brewfile.local"
+  fi
 }
 
 read_pkg_list() {
@@ -120,6 +126,14 @@ main() {
 
   # Build bat's theme cache so custom themes (Catppuccin) are available
   command -v bat >/dev/null && bat cache --build >/dev/null
+
+  # macOS: expose the 1Password SSH agent at the same path Linux uses,
+  # so ~/.ssh/config works on both (requires SSH agent enabled in the app)
+  if [ "$(detect_os)" = "macos" ]; then
+    mkdir -p "$HOME/.1password"
+    ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" \
+      "$HOME/.1password/agent.sock"
+  fi
 
   log "Done. Restart your shell."
 }

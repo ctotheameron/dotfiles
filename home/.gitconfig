@@ -1,2 +1,17 @@
-[url "git@github.com:angellist/"]
-	insteadOf = https://github.com/angellist/
+[user]
+	name = Cameron Austgen
+	email = 3002968+ctotheameron@users.noreply.github.com
+	# Public half of the personal signing key; private key lives in the
+	# Bitwarden SSH agent (SSH_AUTH_SOCK exported in zsh/ssh.zsh)
+	signingkey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHCBui/24dzwhRwbgQ0p0aUrwji0Lf6KhNSRDx8x03Q
+
+[gpg]
+	format = ssh
+
+[commit]
+	gpgsign = true
+
+# Machine-local overrides (untracked; optional). Work identity, work-org
+# includeIf/insteadOf rules, etc. live here — keep them out of this repo.
+[include]
+	path = ~/.gitconfig.local
