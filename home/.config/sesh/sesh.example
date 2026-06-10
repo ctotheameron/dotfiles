@@ -4,27 +4,36 @@
 #
 # This script runs in the session's first window after sesh attaches.
 # cwd is the project root. $TMUX is set, so `tmux ...` commands target
-# the current session.
+# the current session. Without this file, sesh falls back to `nvim .`
+# (see sesh.toml [default_session]).
 #
-# Without this file, sesh falls back to `nvim .` (see sesh.toml).
+# Layout: big editor pane on the left, three stacked command panes right.
+#
+#   ┌─────────────────────────┬────────────┐
+#   │                         │  top_cmd   │
+#   │                         ├────────────┤
+#   │          nvim           │  mid_cmd   │
+#   │                         ├────────────┤
+#   │                         │  bot_cmd   │
+#   └─────────────────────────┴────────────┘
+#
+# Tweak these per project:
+right_width=80 # columns (tmux sizes in cells, not px)
+top_cmd="just dev sync migrate"
+mid_cmd="just console"
+bot_cmd="just dev up -t"
 
-# --- minimal: just open nvim ---
-nvim .
+# Build the right column. `-d` keeps focus here in the editor pane; panes are
+# targeted by id so this works even before the client finishes attaching.
+top=$(tmux split-window -h -d -l "$right_width" -c "$PWD" -P -F '#{pane_id}')
+mid=$(tmux split-window -v -d -t "$top" -l 66% -c "$PWD" -P -F '#{pane_id}')
+bot=$(tmux split-window -v -d -t "$mid" -l 50% -c "$PWD" -P -F '#{pane_id}')
 
-# --- richer example (uncomment to use) ---
-# Rename the first window and split it: editor on the left (70%),
-# a shell on the right (30%).
-#
-# tmux rename-window 'edit'
-# tmux split-window -h -p 30 -c "$PWD"
-# tmux select-pane -L
-#
-# Add a second window running the dev server.
-# tmux new-window -n 'dev' -c "$PWD" 'npm run dev'
-#
-# Add a third window with lazygit.
-# tmux new-window -n 'git' -c "$PWD" 'lazygit'
-#
-# Jump back to the editor before handing off.
-# tmux select-window -t 'edit'
-# nvim .
+# send-keys (rather than running the command as the pane's process) keeps a
+# shell under each command — panes survive ctrl-c / crashes for re-running.
+tmux send-keys -t "$top" "$top_cmd" Enter
+tmux send-keys -t "$mid" "$mid_cmd" Enter
+tmux send-keys -t "$bot" "$bot_cmd" Enter
+
+# Hand this pane over to the editor (quitting nvim drops back to the shell).
+exec nvim .
