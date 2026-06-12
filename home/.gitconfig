@@ -19,5 +19,13 @@
 # includeIf/insteadOf rules, etc. live here — keep them out of this repo.
 [include]
 	path = ~/.gitconfig.local
+
+# Catppuccin theme for delta (https://github.com/catppuccin/delta);
+# mocha to match ghostty + lazygit
+[include]
+	path = ~/.config/delta/catppuccin.gitconfig
+[delta]
+	features = catppuccin-mocha
+
 [core]
 	editor = nvim
