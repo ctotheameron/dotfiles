@@ -106,9 +106,6 @@ keybind = super+z=text:\x02\x7a
 # ⌘L → prefix+L : switch to last sesh session (tmux.conf: bind L)
 keybind = super+l=text:\x02\x4c
 
-# ⌘N → prefix+% : tmux vertical split ("new pane")
-keybind = super+n=text:\x02\x25
-
 # ⌘O → prefix+u : tmux-fzf-url — pick & open a URL from the scrollback
 # keybind = super+o=text:\x02\x75
 #
