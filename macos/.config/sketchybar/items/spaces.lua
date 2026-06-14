@@ -14,7 +14,7 @@ for i = 1, 10, 1 do
       padding_left = 15,
       padding_right = 8,
       color = colors.grey,
-      highlight_color = colors.white,
+      highlight_color = colors.magenta,
     },
     label = {
       padding_right = 20,

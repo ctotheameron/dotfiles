@@ -17,8 +17,11 @@ title = Ghostty
 ## Window / macOS #
 ###################
 macos-titlebar-style = hidden
-macos-window-shadow = true
-window-decoration = true
+macos-window-shadow = false
+# Borderless/square so the window fills its yabai tile flush — rounded
+# corners (window-decoration = true) expose wallpaper at the edges in a
+# tiling layout. Flip back to true if you'd rather have the rounding.
+window-decoration = false
 window-save-state = always
 window-theme = auto
 
