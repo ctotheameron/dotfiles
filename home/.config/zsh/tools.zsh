@@ -13,6 +13,9 @@ if command -v eza >/dev/null; then
   alias ll='eza -l --group-directories-first --icons=auto --git'
   alias la='eza -la --group-directories-first --icons=auto --git'
   alias tree='eza --tree --icons=auto'
+  alias l='eza -l --icons --git -a'
+  alias lt='eza --tree --level=2 --long --icons --git'
+  alias ltree='eza --tree --level=2 --icons --git'
 fi
 
 # zoxide > cd
@@ -27,6 +30,12 @@ command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 # fzf first (ctrl-t files, alt-c dirs), then atuin so it wins ctrl-r history
 if command -v fzf >/dev/null; then
   source <(fzf --zsh)
+
+  # Catppuccin color scheme
+  export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
   # Use fd for all fzf listings: faster, respects .gitignore, includes hidden
   if command -v fd >/dev/null; then
@@ -55,6 +64,9 @@ if command -v fzf >/dev/null; then
       *)            fzf --preview "$_fzf_preview" "$@" ;;
     esac
   }
+
+  # fzf-git.sh: keybinds for git objects (ctrl-g ctrl-{b,t,h,...})
+  [ -f ~/.config/fzf-git.sh/fzf-git.sh ] && source ~/.config/fzf-git.sh/fzf-git.sh
 fi
 command -v atuin >/dev/null && eval "$(atuin init zsh)"
 
@@ -80,3 +92,13 @@ for _plugin_dir in /opt/homebrew/share /usr/share/zsh/plugins; do
     source "$_plugin_dir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 done
 unset _plugin_dir
+
+# Keybinds. autosuggest-* widgets only exist after zsh-autosuggestions loads,
+# so these must come after the plugin loop above. Alt-j is left free for the
+# sesh picker (see sesh.zsh).
+bindkey '^w' autosuggest-execute
+bindkey '^e' autosuggest-accept
+bindkey '^u' autosuggest-toggle
+bindkey 'jj' vi-cmd-mode
+bindkey '^k' up-line-or-search
+bindkey '^j' down-line-or-search
