@@ -30,7 +30,12 @@ gui:
       - '#cdd6f4'
   authorColors:
     '*': '#b4befe'
+  commitLength:
+    show: true
 git:
   pagers:
     - colorArg: always
       pager: delta --dark --paging=never --side-by-side
+  commit:
+    autoWrapCommitMessage: true
+    autoWrapWidth: 80

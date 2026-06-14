@@ -17,8 +17,8 @@ title = Ghostty
 ## Window / macOS #
 ###################
 macos-titlebar-style = hidden
-macos-window-shadow = false
-window-decoration = false
+macos-window-shadow = true
+window-decoration = true
 window-save-state = always
 window-theme = auto
 
@@ -26,13 +26,12 @@ window-theme = auto
 ## UI / visuals
 ################
 theme = Catppuccin Mocha
-background-opacity = 0.80
-background-blur-radius = 20
+background-opacity = 0.85
+background-blur-radius = 10
+cursor-style = block
 bold-is-bright = true
 mouse-hide-while-typing = true
-window-padding-balance = true
-window-padding-x = 16
-window-padding-y = 10
+window-padding-y = 10, 0
 
 font-family = "Liga SFMono Nerd Font"
 font-size = 16
