@@ -7,9 +7,20 @@ return {
 
     opts = {
       transparent_background = true,
+      flavour = "mocha",
       float = {
         transparent = true,
         solid = false,
+      },
+      highlight_overrides = {
+        --@param cp palette
+        all = function(cp)
+          return {
+            ["@tag.attribute.tsx"] = { fg = cp.lavender, style = clear },
+            ["@tag.delimiter.tsx"] = { fg = cp.mauve, style = clear },
+            ["@tag.tsx"] = { fg = cp.mauve, style = clear },
+          }
+        end,
       },
       integrations = {
         aerial = true,
@@ -52,7 +63,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin-macchiato",
+      colorscheme = "catppuccin-mocha",
     },
   },
 }
