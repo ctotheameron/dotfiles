@@ -10,6 +10,14 @@ return {
         matcher = {
           frecency = true,
         },
+        actions = {
+          -- Send the picker results to the Trouble list. LazyVim only defines
+          -- this in its editor.snacks_picker extra (which we don't use), so
+          -- register it here. Requires trouble.nvim (shipped by LazyVim).
+          trouble_open = function(...)
+            return require("trouble.sources.snacks").actions.trouble_open.action(...)
+          end,
+        },
         win = {
           input = {
             keys = {
