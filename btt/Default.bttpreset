@@ -25,8 +25,8 @@
           "BTTTriggerTypeDescription" : "3 Finger Swipe Up",
           "BTTTriggerClass" : "BTTTriggerTypeMagicMouse",
           "BTTUUID" : "18EF29EB-3F40-441B-B392-1267C7ED465D",
-          "BTTPredefinedActionType" : 45,
-          "BTTPredefinedActionName" : "Show Desktop",
+          "BTTPredefinedActionType" : 5,
+          "BTTPredefinedActionName" : "Mission Control",
           "BTTOrder" : 0,
           "BTTGestureNotes" : "3 Finger Swipe Up"
         }
