@@ -7,7 +7,12 @@ return {
   },
   {
     "nvim-mini/mini.files",
-    opts = {},
+    opts = {
+      windows = {
+        max_number = 3,
+        width_preview = 80,
+      },
+    },
     keys = {
       {
         "-",
