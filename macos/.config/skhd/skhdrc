@@ -1,16 +1,18 @@
 # TODO https://github.com/koekeishiya/yabai/issues/725
 
-# focus window (falls back to adjacent display at screen edges)
-alt - h : yabai -m window --focus west  || yabai -m display --focus west
-alt - j : yabai -m window --focus south || yabai -m display --focus south
-alt - k : yabai -m window --focus north || yabai -m display --focus north
-alt - l : yabai -m window --focus east  || yabai -m display --focus east
+# focus window: directional for managed windows; on a floating PiP, pip.sh picks
+# the nearest managed window (or recent); tiled at a screen edge -> next display
+alt - h : yabai -m window --focus west  || $HOME/.config/yabai/pip.sh focus west
+alt - j : yabai -m window --focus south || $HOME/.config/yabai/pip.sh focus south
+alt - k : yabai -m window --focus north || $HOME/.config/yabai/pip.sh focus north
+alt - l : yabai -m window --focus east  || $HOME/.config/yabai/pip.sh focus east
 
-# swap managed window
-shift + alt - h : yabai -m window --swap west
-shift + alt - j : yabai -m window --swap south
-shift + alt - k : yabai -m window --swap north
-shift + alt - l : yabai -m window --swap east
+# move window: tiled windows swap; floating (PiP) windows walk corners and
+# hop monitors at the edges. @see ~/.config/yabai/pip.sh
+shift + alt - h : $HOME/.config/yabai/pip.sh left west
+shift + alt - j : $HOME/.config/yabai/pip.sh bottom south
+shift + alt - k : $HOME/.config/yabai/pip.sh top north
+shift + alt - l : $HOME/.config/yabai/pip.sh right east
 
 # move managed window
 shift + alt + ctrl - h : yabai -m window --warp west
@@ -30,6 +32,10 @@ alt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
 # float / unfloat window and center on screen
 alt - t : yabai -m window --toggle float;\
           yabai -m window --grid 4:4:1:1:2:2
+
+# toggle picture-in-picture: float + pin across spaces, park top-right (2x padding)
+# then shift+alt+hjkl walks it corner-to-corner and across monitors
+shift + alt - p : $HOME/.config/yabai/pip.sh enter
 
 # toggle window split type
 alt - e : yabai -m window --toggle split
