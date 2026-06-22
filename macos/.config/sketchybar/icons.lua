@@ -35,11 +35,6 @@ local icons = {
       disconnected = "􀙈",
       router = "􁓤",
     },
-    media = {
-      back = "􀊊",
-      forward = "􀊌",
-      play_pause = "􀊈",
-    },
   },
 
   -- Alternative NerdFont icons
@@ -76,11 +71,6 @@ local icons = {
       connected = "󰖩",
       disconnected = "󰖪",
       router = "Missing Icon"
-    },
-    media = {
-      back = "",
-      forward = "",
-      play_pause = "",
     },
   },
 }
