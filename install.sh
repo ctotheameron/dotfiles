@@ -110,6 +110,26 @@ stow_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# Services (macOS window-manager stack)
+# ---------------------------------------------------------------------------
+start_wm_services() {
+  # Bring up the window-manager stack under launchd so it runs at login.
+  # yabai/skhd manage their own LaunchAgents via --start-service; sketchybar
+  # and borders use Homebrew services. Idempotent: safe to re-run.
+  #
+  # brew's bootstrap occasionally loads a job without running it (RunAtLoad
+  # doesn't fire, leaving `runs = 0`), so kickstart afterwards to force it —
+  # this is what otherwise leaves these "installed but not running".
+  log "Starting window-manager services"
+  yabai --start-service 2>/dev/null || true
+  skhd --start-service 2>/dev/null || true
+  for svc in sketchybar borders; do
+    brew services start "$svc" >/dev/null 2>&1 || true
+    launchctl kickstart -p "gui/$(id -u)/homebrew.mxcl.${svc}" >/dev/null 2>&1 || true
+  done
+}
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 main() {
@@ -138,6 +158,8 @@ main() {
   # macOS: expose the 1Password SSH agent at the same path Linux uses,
   # so ~/.ssh/config works on both (requires SSH agent enabled in the app)
   if [ "$(detect_os)" = "macos" ]; then
+    start_wm_services
+
     mkdir -p "$HOME/.1password"
     ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" \
       "$HOME/.1password/agent.sock"
