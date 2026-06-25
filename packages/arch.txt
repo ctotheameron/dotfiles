@@ -9,6 +9,7 @@ fd
 fzf
 ghostty
 git
+git-delta
 github-cli
 go
 jq

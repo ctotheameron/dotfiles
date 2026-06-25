@@ -80,6 +80,25 @@ install_packages_arch() {
   else
     log "No AUR helper (yay/paru) found; skipping packages/aur.txt"
   fi
+
+  install_fonts_arch
+}
+
+# "Liga SFMono Nerd Font" (ghostty's font-family) installs via a Homebrew cask
+# on macOS (see Brewfile); Arch has no package, so pull the same files from the
+# upstream repo into the user fonts dir. Idempotent.
+install_fonts_arch() {
+  fc-list 2>/dev/null | grep -qi 'Liga SFMono Nerd Font' && return 0
+  log "Installing Liga SFMono Nerd Font"
+  local tmp dest
+  tmp="$(mktemp -d)"
+  git clone --depth 1 \
+    https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized "$tmp"
+  dest="$HOME/.local/share/fonts/LigaSFMonoNerdFont"
+  mkdir -p "$dest"
+  cp "$tmp"/*.otf "$dest"/
+  rm -rf "$tmp"
+  fc-cache -f "$dest" >/dev/null
 }
 
 # ---------------------------------------------------------------------------
