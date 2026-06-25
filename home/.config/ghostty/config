@@ -133,6 +133,13 @@ keybind = super+shift+right_bracket=text:\x02\x70
 
 # --- Free keys (ideas, nothing bound) --------------
 # super+a (select all?)   super+b (build?)      super+d   super+e
+
+# --- Linux / omarchy overrides ----------------------------------------------
+# Optional include (the `?` means "skip if absent"). Provided by the `arch`
+# stow package as ~/.config/ghostty/linux.conf and only present on Arch, so
+# macOS ignores it. Loaded last, so its settings win (async-backend, omarchy
+# dynamic theme, Linux clipboard keys, no close-confirm dialog).
+config-file = ?"~/.config/ghostty/linux.conf"
 # super+h (hide?)         super+i               super+m (minimize?)
 # super+u                 super+v (paste)       super+x (cut)
 # super+y                 super+shift+j (secondary sesh)

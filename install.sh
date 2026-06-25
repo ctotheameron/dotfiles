@@ -143,7 +143,12 @@ main() {
     # all machines, but only stowed on macOS
     STOW_PACKAGES+=(macos)
     ;;
-  arch) install_packages_arch ;;
+  arch)
+    install_packages_arch
+    # Linux/Hyprland-only configs (hypr, ghostty Linux overrides) — tracked
+    # for all machines, but only stowed on Arch
+    STOW_PACKAGES+=(arch)
+    ;;
   *)
     echo "Unsupported OS. This script supports macOS and Arch." >&2
     exit 1
