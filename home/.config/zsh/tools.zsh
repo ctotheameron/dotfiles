@@ -81,7 +81,12 @@ fi
 
 # Graphite CLI completions. Auth is per-machine: `gt auth` (token would
 # otherwise live in ~/.config/graphite/user_config — never commit that).
-command -v gt >/dev/null && eval "$(gt completion)"
+# Capture output first so a broken `gt` binary (e.g. a pkg-bundled AUR build
+# printing "Pkg: Error reading from file.") can't spam stderr on every startup.
+if command -v gt >/dev/null; then
+  _gt_completion="$(gt completion 2>/dev/null)" && eval "$_gt_completion"
+  unset _gt_completion
+fi
 
 # Ghost-text suggestions from history (accept with →) and live command
 # syntax highlighting. Paths: Homebrew (macOS) and pacman (Arch).
