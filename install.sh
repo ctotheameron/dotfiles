@@ -110,6 +110,31 @@ stow_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# tmux plugins (tpm)
+# ---------------------------------------------------------------------------
+bootstrap_tmux_plugins() {
+  # tpm and the plugins it manages are gitignored (see .gitignore), so clone
+  # tpm and install the plugins declared in tmux.conf. Idempotent.
+  command -v tmux >/dev/null || return 0
+
+  local plugins_dir="$HOME/.config/tmux/plugins"
+  local tpm_dir="$plugins_dir/tpm"
+
+  if [ ! -d "$tpm_dir" ]; then
+    log "Cloning tpm"
+    git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
+  fi
+
+  log "Installing tmux plugins (tpm)"
+  # install_plugins reads @plugin entries from a running server and needs the
+  # plugin path exported (normally done by the tpm run line in tmux.conf).
+  export TMUX_PLUGIN_MANAGER_PATH="$plugins_dir/"
+  tmux new-session -d -s __tpm_bootstrap 2>/dev/null || true
+  "$tpm_dir/bin/install_plugins" || log "Some tmux plugins failed; run <prefix>+I in tmux to retry"
+  tmux kill-session -t __tpm_bootstrap 2>/dev/null || true
+}
+
+# ---------------------------------------------------------------------------
 # Services (macOS window-manager stack)
 # ---------------------------------------------------------------------------
 start_wm_services() {
@@ -156,6 +181,9 @@ main() {
   esac
 
   stow_packages
+
+  # tmux plugins (tpm clones + the plugins it manages are gitignored)
+  bootstrap_tmux_plugins
 
   # Build bat's theme cache so custom themes (Catppuccin) are available
   command -v bat >/dev/null && bat cache --build >/dev/null
