@@ -39,3 +39,10 @@ git:
   commit:
     autoWrapCommitMessage: true
     autoWrapWidth: 80
+os:
+  # `e` opens file(s) in the parent Neovim as normal buffers (not tabs),
+  # replaces the quickfix list with the selection, and opens Trouble.
+  # Explicit edit/editAtLine override snacks.nvim's nvim-remote tab preset.
+  # See helpers/nvim-edit.sh + ~/.config/nvim/lua/util/lazygit_qf.lua.
+  edit: '"$HOME/.config/lazygit/nvim-edit.sh" {{filename}}'
+  editAtLine: '"$HOME/.config/lazygit/nvim-edit.sh" --line {{line}} {{filename}}'
