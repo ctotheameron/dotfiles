@@ -3,10 +3,16 @@
 sudo yabai --load-sa
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 
-# Reload sketchybar when a monitor is connected/disconnected so the bar
-# re-lays-out across the new display arrangement (sleep lets macOS settle first).
-yabai -m signal --add event=display_added action="sleep 1 && /opt/homebrew/bin/sketchybar --reload"
-yabai -m signal --add event=display_removed action="sleep 1 && /opt/homebrew/bin/sketchybar --reload"
+# Restart sketchybar when a monitor is connected/disconnected so the bar
+# re-lays-out across the new display arrangement. A full launchctl restart
+# (not `sketchybar --reload`) because sketchybar can crash during display
+# reconfiguration — --reload only acts on a live instance and can't revive a
+# crashed bar, whereas kickstart -k starts it whether it's alive or dead.
+# The sleep lets the arrangement settle before the fresh process starts.
+yabai -m signal --add label=sketchybar_display_added event=display_added \
+  action="sleep 2 && launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar"
+yabai -m signal --add label=sketchybar_display_removed event=display_removed \
+  action="sleep 2 && launchctl kickstart -k gui/$(id -u)/homebrew.mxcl.sketchybar"
 
 yabai -m config external_bar all:40:0 \
   mouse_follows_focus off \
