@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# hypr-balance — best-effort equivalent of `yabai -m space --balance` for
+# Hyprland's dwindle layout.
+#
+# dwindle has no native balance/equalize command (confirmed against the wiki),
+# and hyprctl doesn't expose the split tree, so we can't do a true weighted
+# balance. Instead we reset every tiled window's split ratio to the default 1.0
+# (a 50/50 split) on the active workspace — exact for 2/4/8-window layouts and a
+# reasonable approximation otherwise.
+#
+# NB: the `splitratio` dispatcher was removed in Hyprland 0.54; the current form
+# is `layoutmsg splitratio <value> exact` (value first, then the `exact` word).
+
+set -uo pipefail
+command -v jq >/dev/null || exit 0
+
+ws="$(hyprctl activeworkspace -j | jq -r '.id')"
+orig="$(hyprctl activewindow -j | jq -r '.address // empty')"
+
+mapfile -t wins < <(hyprctl clients -j | jq -r --argjson ws "$ws" '
+  .[] | select(.workspace.id == $ws and .floating == false and .mapped == true) | .address')
+
+# Nothing to balance with 0 or 1 tiled windows.
+((${#wins[@]} > 1)) || exit 0
+
+for w in "${wins[@]}"; do
+  hyprctl --batch "dispatch focuswindow address:$w ; dispatch layoutmsg splitratio 1.0 exact" >/dev/null
+done
+
+# Restore the originally-focused window.
+[ -n "$orig" ] && hyprctl dispatch focuswindow "address:$orig" >/dev/null
