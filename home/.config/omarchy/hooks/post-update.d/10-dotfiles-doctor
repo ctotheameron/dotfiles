@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Omarchy post-update hook: flag dotfiles drift caused by migrations.
+# Omarchy migrations patch ~/.config files with `sed -i`/`cp`, which can sever
+# stow symlinks. This reports (it never auto-reverts — a migration's change may
+# be intended). Run `dotfiles-doctor --fix` yourself after reviewing.
+#
+command -v dotfiles-doctor >/dev/null || exit 0
+
+if ! dotfiles-doctor --quiet; then
+  command -v notify-send >/dev/null &&
+    notify-send -u critical "dotfiles-doctor" \
+      "Omarchy update changed stow-managed config. Run: dotfiles-doctor"
+fi
+exit 0
