@@ -37,10 +37,10 @@ mouse-hide-while-typing = true
 window-padding-y = 10, 0
 
 font-family = "Liga SFMono Nerd Font"
-font-size = 16
+font-size = 14
 # Fallback for icons/symbols — ghostty usually finds these automatically,
 # only uncomment if glyphs render as boxes:
-# font-family = "Symbols Nerd F Mono"
+# font-family = "Liga SFMono Nerd Font"
 
 ####################
 ## Quick terminal ##
