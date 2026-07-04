@@ -60,22 +60,21 @@ windows = []
 
 [[session]]
 name = "dotfiles"
-path = "~/.config"
+path = "~/Projects/dotfiles"
 
 [[session]]
 name = "sesh config"
-path = "$HOME/.config/sesh"
+path = "~/dotfiles/home/.config/sesh"
 startup_command = "nvim sesh.toml"
 preview_command = "bat --language=toml --style=snip --color=always $HOME/c/dotfiles/.config/sesh/sesh.toml"
 
 [[session]]
 name = "tmux config"
-path = "~/c/dotfiles/.config/tmux"
+path = "~/dotfiles/home/.config/tmux"
 startup_command = "nvim tmux.conf"
 preview_command = "bat --language=bash --style=snip --color=always ~/c/dotfiles/.config/tmux/tmux.conf"
 
 [[session]]
 name = "ghostty config"
-path = "~/.config/ghostty"
+path = "~/dotfiles/home/.config/ghostty"
 startup_command = "nvim config"
-
