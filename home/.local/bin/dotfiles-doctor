@@ -2,14 +2,23 @@
 #
 # dotfiles-doctor — detect drift between the dotfiles repo and $HOME.
 #
-# The main thing it catches: Omarchy migrations (run by `omarchy-update`) patch
-# live config files with `sed -i` / `cp`, which can replace a stow symlink with
-# a plain file (severing it from the repo) or write changes through into the
-# repo. This reports those so they don't silently rot.
+# Model: configs are stowed into $HOME. GNU stow may FOLD a whole directory
+# into a single symlink, so a file like ~/.config/bat/config is a real file
+# reached *through* a parent-dir symlink — it is healthy even though the file
+# itself is not a symlink. Health is therefore decided by canonical resolution:
+# a target is healthy iff `readlink -f` lands inside the repo (this covers both
+# per-file symlinks and folded-directory symlinks).
+#
+# Omarchy migrations (`omarchy-update`) patch live config with `sed -i`/`cp`.
+# Inside a folded dir those writes land in the repo working tree and show up as
+# ordinary `git status` changes (the primary drift signal below). On an
+# UNfolded per-file symlink, `sed -i` severs the link into a standalone real
+# file — that is what this reports as "severed".
 #
 #   dotfiles-doctor          # report drift (exit non-zero if any)
 #   dotfiles-doctor --quiet  # only print/exit-nonzero when there IS drift
-#   dotfiles-doctor --fix    # back up offending real files, then re-stow
+#   dotfiles-doctor --fix    # re-link severed/foreign targets (never touches
+#                            #   anything that resolves into the repo)
 #
 set -uo pipefail
 
@@ -22,7 +31,7 @@ for a in "$@"; do
     --fix) FIX=1 ;;
     --quiet) QUIET=1 ;;
     -h | --help)
-      sed -n '3,14p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '3,20p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     *)
@@ -33,6 +42,7 @@ for a in "$@"; do
 done
 
 [ -d "$DOTFILES_DIR" ] || { echo "dotfiles-doctor: $DOTFILES_DIR not found" >&2; exit 2; }
+DOTFILES_REAL="$(readlink -f "$DOTFILES_DIR")"
 
 # Stow packages that apply on this OS (mirror install.sh).
 pkgs=(home)
@@ -41,9 +51,18 @@ case "$(uname -s)" in
   Linux) [ -d "$DOTFILES_DIR/arch" ] && pkgs+=(arch) ;;
 esac
 
-broken=() # exists in $HOME as a real file where a repo symlink is expected
-foreign=() # symlink, but not pointing into the repo
-unlinked=() # tracked by repo but nothing at the target
+# Healthy iff the path canonically resolves to somewhere inside the repo. This
+# follows EVERY symlink on the way (including a folded parent directory), which
+# is exactly why it does not false-flag files inside a folded dir. It is also
+# the safety predicate for --fix: a true result means "do not touch".
+under_repo() {
+  local real
+  real="$(readlink -f "$1" 2>/dev/null)" || return 1
+  [ -n "$real" ] && [[ "$real" == "$DOTFILES_REAL"/* ]]
+}
+
+broken=()   # exists at target but resolves OUTSIDE the repo (severed file or foreign link)
+unlinked=() # tracked by the repo but nothing usable at the target
 
 for pkg in "${pkgs[@]}"; do
   [ -d "$DOTFILES_DIR/$pkg" ] || continue
@@ -70,48 +89,84 @@ for pkg in "${pkgs[@]}"; do
   done < <(cd "$DOTFILES_DIR/$pkg" && find . \( -type f -o -type l \))
 done
 
-problems=$((${#broken[@]} + ${#foreign[@]}))
+problems=${#broken[@]}
+
+# Primary drift signal: migrations that write THROUGH a (folded) symlink land in
+# the repo working tree as ordinary git changes. This is how write-through edits
+# surface, so it counts as drift too (the post-update hook relies on it).
+gitout="$(git -C "$DOTFILES_DIR" status --short 2>/dev/null)"
 
 report() {
   if ((${#broken[@]})); then
-    echo "✗ replaced by real files (symlink severed — likely an Omarchy migration):"
-    printf '    ~/%s\n' "${broken[@]}"
+    echo "✗ not linked to the repo (severed by a migration, or a foreign symlink):"
+    for rel in "${broken[@]}"; do
+      tgt="$HOME/$rel"
+      if [ -L "$tgt" ]; then
+        printf '    ~/%s  ->  %s\n' "$rel" "$(readlink "$tgt")"
+      else
+        printf '    ~/%s  (real file — symlink severed)\n' "$rel"
+      fi
+    done
   fi
-  if ((${#foreign[@]})); then
-    echo "✗ symlinks pointing outside the repo:"
-    printf '    ~/%s\n' "${foreign[@]}"
-  fi
-  # Repo-side drift (e.g. a migration appended/cp'd through a live symlink).
-  local gitout
-  gitout="$(git -C "$DOTFILES_DIR" status --short 2>/dev/null)"
   if [ -n "$gitout" ]; then
-    echo "• uncommitted changes in $DOTFILES_DIR:"
+    echo "• uncommitted changes in $DOTFILES_DIR (review with 'git diff', then commit or restore):"
     echo "$gitout" | sed 's/^/    /'
   fi
 }
 
-if ((problems == 0)); then
-  ((QUIET)) || echo "dotfiles-doctor: ✓ all managed symlinks healthy (${#unlinked[@]} tracked paths not linked)"
+# Drift = broken symlinks OR repo-side changes. Keeping the repo committed makes
+# this signal clean, so an omarchy update that edits config stands out.
+drift=0
+((problems)) && drift=1
+[ -n "$gitout" ] && drift=1
+
+if ((drift == 0)); then
+  ((QUIET)) || echo "dotfiles-doctor: ✓ symlinks healthy and repo clean (${#unlinked[@]} tracked paths not linked)"
   exit 0
 fi
 
-echo "dotfiles-doctor: found $problems symlink issue(s)"
+if ((QUIET)); then
+  # Terse one-liner so the post-update hook has something to log, then exit
+  # non-zero to trigger its notification.
+  msg="dotfiles-doctor: drift detected —"
+  ((problems)) && msg+=" $problems severed/foreign symlink(s);"
+  [ -n "$gitout" ] && msg+=" uncommitted repo changes;"
+  echo "${msg%;}"
+  exit 1
+fi
+
+((problems)) && echo "dotfiles-doctor: found $problems symlink issue(s)"
 report
 
-if ((FIX)); then
-  ts="$(date +%Y%m%d-%H%M%S)"
-  backup="$HOME/.dotfiles-backup/doctor-$ts"
+if ((problems > 0)); then
+  if ((FIX)); then
+    ts="$(date +%Y%m%d-%H%M%S)"
+    backup="$HOME/.dotfiles-backup/doctor-$ts"
+    echo
+    echo "→ backing up severed/foreign targets to $backup and re-stowing…"
+    for rel in "${broken[@]}"; do
+      tgt="$HOME/$rel"
+      # SAFETY NET: never move a path that resolves into the repo. Without this,
+      # `mv` would follow a folded parent-dir symlink and yank the file straight
+      # out of the repo. `broken` should never contain such a path, but assert it.
+      if under_repo "$tgt"; then
+        echo "  ⚠ skip ~/$rel — resolves into the repo (folded dir), refusing to touch"
+        continue
+      fi
+      mkdir -p "$backup/$(dirname "$rel")"
+      mv "$tgt" "$backup/$rel"
+    done
+    stow -d "$DOTFILES_DIR" -t "$HOME" --restow "${pkgs[@]}"
+    echo "✓ re-stowed. Compare the backup against the repo to fold in any wanted"
+    echo "  migration changes:  diff -ru $backup ~/<path>"
+  else
+    echo
+    echo "Re-link with:  dotfiles-doctor --fix   (backs up the severed files first)"
+  fi
+elif [ -n "$gitout" ]; then
+  # No symlink problems — the only drift is repo-side. Nothing to re-stow; the
+  # user reviews and commits or restores. --fix has nothing to do here.
   echo
-  echo "→ backing up severed files to $backup and re-stowing…"
-  for rel in "${broken[@]}"; do
-    mkdir -p "$backup/$(dirname "$rel")"
-    mv "$HOME/$rel" "$backup/$rel"
-  done
-  stow -d "$DOTFILES_DIR" -t "$HOME" --restow "${pkgs[@]}"
-  echo "✓ re-stowed. Compare the backup against the repo to fold in any wanted"
-  echo "  migration changes:  diff -ru $backup ~/<path>"
-else
-  echo
-  echo "Fix with:  dotfiles-doctor --fix   (backs up the changed files first)"
+  echo "No symlinks to re-link — this is repo-side drift. Review and commit or restore."
 fi
 exit 1

@@ -1,9 +1,11 @@
 #!/bin/bash
 #
 # Omarchy post-update hook: flag dotfiles drift caused by migrations.
-# Omarchy migrations patch ~/.config files with `sed -i`/`cp`, which can sever
-# stow symlinks. This reports (it never auto-reverts — a migration's change may
-# be intended). Run `dotfiles-doctor --fix` yourself after reviewing.
+# Omarchy migrations patch ~/.config files with `sed -i`/`cp`. Through a stow
+# folded-dir symlink those writes land in the repo working tree (show up as
+# `git status` changes); on an unfolded symlink they sever it. dotfiles-doctor
+# reports both and never auto-reverts. Review with `git -C ~/Projects/dotfiles
+# diff`, then commit/restore, or run `dotfiles-doctor --fix` to re-link.
 #
 command -v dotfiles-doctor >/dev/null || exit 0
 
