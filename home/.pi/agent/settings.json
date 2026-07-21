@@ -18,5 +18,9 @@
   ],
   "defaultThinkingLevel": "xhigh",
   "defaultProvider": "anthropic",
-  "defaultModel": "claude-fable-5"
+  "defaultModel": "claude-fable-5",
+  "warnings": {
+    "anthropicExtraUsage": true
+  },
+  "quietStartup": true
 }
