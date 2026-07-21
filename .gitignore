@@ -11,6 +11,7 @@ home/.pi/agent/npm/
 home/.pi/agent/sessions/
 home/.pi/agent/*-memory/
 home/.pi/agent/*.sqlite
+home/.pi/agent/*-state.json
 
 # Work-specific config stays local
 home/.config/zsh/work.zsh

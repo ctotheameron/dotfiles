@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.80.10",
-  "theme": "dark",
+  "theme": "catppuccin-tui-mocha",
   "packages": [
     "npm:pi-claude-auth",
     "npm:pi-mcp-adapter",
@@ -13,7 +13,8 @@
     "npm:@trashcodermaker/pi-pr-review-handler",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-zentui",
-    "npm:pi-thinking-box"
+    "npm:pi-thinking-box",
+    "npm:pi-catppuccin-tui"
   ],
   "defaultThinkingLevel": "xhigh",
   "defaultProvider": "anthropic",
