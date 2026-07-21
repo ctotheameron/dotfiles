@@ -25,7 +25,7 @@ placeholder = "Pick a seshhhhh"
 # blacklist_sources = ["tmux", "zoxide"]
 
 # projects
-# project_roots = ["~/c"]
+# project_roots = ["~/Projects"]
 # max_depth = 2
 # sort_order = ["tmux", "projects"]
 
@@ -60,19 +60,19 @@ windows = []
 
 [[session]]
 name = "dotfiles"
-path = "~/Projects/dotfiles"
+path = "~/dotfiles"
 
 [[session]]
 name = "sesh config"
 path = "~/dotfiles/home/.config/sesh"
 startup_command = "nvim sesh.toml"
-preview_command = "bat --language=toml --style=snip --color=always $HOME/c/dotfiles/.config/sesh/sesh.toml"
+preview_command = "bat --language=toml --style=snip --color=always $HOME/dotfiles/home/.config/sesh/sesh.toml"
 
 [[session]]
 name = "tmux config"
 path = "~/dotfiles/home/.config/tmux"
 startup_command = "nvim tmux.conf"
-preview_command = "bat --language=bash --style=snip --color=always ~/c/dotfiles/.config/tmux/tmux.conf"
+preview_command = "bat --language=bash --style=snip --color=always ~/dotfiles/home/.config/tmux/tmux.conf"
 
 [[session]]
 name = "ghostty config"

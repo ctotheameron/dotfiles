@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 #
-# Export all BetterTouchTool presets to btt/ so they can be committed.
+# Export all BetterTouchTool presets to macos/btt/ so they can be committed.
 # Run this after changing BTT config, then commit the result.
-# Restore on a new machine: open btt/<name>.bttpreset (BTT prompts to import).
+# Restore on a new machine: open macos/btt/<name>.bttpreset (BTT prompts to
+# import).
 
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT_DIR="$DOTFILES_DIR/btt"
+OUT_DIR="$DOTFILES_DIR/macos/btt"
 mkdir -p "$OUT_DIR"
 
 if ! osascript -e 'tell application "System Events" to exists process "BetterTouchTool"' | grep -q true; then

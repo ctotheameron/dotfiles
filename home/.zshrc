@@ -11,6 +11,7 @@ SAVEHIST=50000
 setopt share_history hist_ignore_dups hist_ignore_space hist_verify
 
 # --- PATH ------------------------------------------------------------------
+export PATH="$HOME/.local/bin:$PATH"  # claude (native installer), user bins
 export PATH="$HOME/.asdf/shims:$PATH"
 export GOBIN=$HOME/bin
 export PATH="$GOBIN:$PATH"

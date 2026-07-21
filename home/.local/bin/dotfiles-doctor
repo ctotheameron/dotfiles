@@ -13,7 +13,8 @@
 #
 set -uo pipefail
 
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Projects/dotfiles}"
+# Default to the repo this (stowed) script lives in: <repo>/home/.local/bin
+DOTFILES_DIR="${DOTFILES_DIR:-"$(cd "$(dirname "$(realpath "$0")")/../../.." && pwd)"}"
 FIX=0
 QUIET=0
 for a in "$@"; do
@@ -49,17 +50,24 @@ for pkg in "${pkgs[@]}"; do
   while IFS= read -r rel; do
     rel="${rel#./}"
     tgt="$HOME/$rel"
-    if [ -L "$tgt" ]; then
+    if [ -L "$tgt" ] || [ -e "$tgt" ]; then
+      # Resolve ancestor symlinks too: stow can fold a whole directory into
+      # one link, leaving healthy files that aren't symlinks themselves.
       case "$(readlink -f "$tgt" 2>/dev/null)" in
         "$DOTFILES_DIR"/*) : ;; # healthy
-        *) foreign+=("$rel") ;;
+        *)
+          if [ -L "$tgt" ]; then
+            foreign+=("$rel")
+          else
+            broken+=("$rel") # real file where a symlink should be
+          fi
+          ;;
       esac
-    elif [ -e "$tgt" ]; then
-      broken+=("$rel") # real file where a symlink should be
     else
       unlinked+=("$rel")
     fi
-  done < <(cd "$DOTFILES_DIR/$pkg" && find . \( -type f -o -type l \) -printf '%P\n')
+  # No -printf: BSD find lacks it; the ${rel#./} strip above covers both.
+  done < <(cd "$DOTFILES_DIR/$pkg" && find . \( -type f -o -type l \))
 done
 
 problems=$((${#broken[@]} + ${#foreign[@]}))

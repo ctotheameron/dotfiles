@@ -41,11 +41,12 @@ Secrets are never tracked, so after `install.sh` run:
 ## BetterTouchTool (macOS)
 
 BTT stores config in versioned SQLite databases, so it can't be stowed.
-Instead, presets are exported as JSON into `btt/`:
+Instead, presets are exported as JSON into `macos/btt/` (excluded from
+stowing via `macos/.stow-local-ignore`):
 
 - After changing BTT config: `scripts/export-btt.sh`, then commit.
-- On a new machine (after `brew bundle` installs BTT): `open btt/*.bttpreset`
-  and confirm the import prompt.
+- On a new machine (after `brew bundle` installs BTT):
+  `open macos/btt/*.bttpreset` and confirm the import prompt.
 
 ## Day-to-day
 

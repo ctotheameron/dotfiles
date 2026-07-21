@@ -1,0 +1,3 @@
+# btt/ holds BTT preset exports imported manually via `open` (see README) —
+# it's repo data, not a config to symlink into $HOME.
+^/btt

@@ -3,6 +3,7 @@
 atuin
 aws-cli
 bat
+btop
 direnv
 eza
 fd

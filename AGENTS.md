@@ -19,7 +19,7 @@ packages/Brewfile   macOS packages (brew bundle)
 packages/arch.txt   Arch official repo packages (pacman)
 packages/aur.txt    Arch AUR packages (yay/paru)
 scripts/            maintenance helpers (e.g. export-btt.sh)
-btt/                BetterTouchTool preset exports (JSON)
+macos/btt/          BetterTouchTool preset exports (JSON, not stowed)
 install.sh          bootstrap: detects OS, installs packages, stows, post-setup
 .stowrc             makes plain `stow home` target $HOME
 ```
@@ -41,7 +41,8 @@ The owner runs macOS and Arch (Omarchy). Both must keep working.
 - macOS-only configs (yabai, skhd, sketchybar, borders) live in the `macos/`
   stow package, which install.sh only stows on Darwin. Track macOS-only
   things there — never in `home/`, which must stay cross-platform. BTT is
-  the exception (preset exports in `btt/`, see below).
+  the exception (preset exports in `macos/btt/`, excluded from stowing via
+  `macos/.stow-local-ignore`, see below).
 - Paths that differ per OS and can't be unified get a comment noting the
   other OS's value (e.g. `op-ssh-sign` in `home/.gitconfig`) and can be
   overridden via the machine-local escape hatches (below).

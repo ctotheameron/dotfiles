@@ -154,6 +154,25 @@ bootstrap_tmux_plugins() {
 }
 
 # ---------------------------------------------------------------------------
+# Claude Code (native installer)
+# ---------------------------------------------------------------------------
+install_claude_code() {
+  # Not in Brewfile/aur.txt on purpose: the native installer self-updates in
+  # the background, while brew/AUR installs nag for manual upgrades. The
+  # binary lives outside the repo (~/.local/share/claude + ~/.local/bin
+  # launcher); this just bootstraps it. Idempotent.
+  [ -x "$HOME/.local/bin/claude" ] && return 0
+  command -v claude >/dev/null && return 0
+
+  log "Installing Claude Code"
+  # Pre-create as the current user — the installer refuses to write the
+  # launcher into a directory it can't own (e.g. left root-owned by a
+  # previous sudo'd tool install).
+  mkdir -p "$HOME/.local/bin"
+  curl -fsSL https://claude.ai/install.sh | bash
+}
+
+# ---------------------------------------------------------------------------
 # Services (macOS window-manager stack)
 # ---------------------------------------------------------------------------
 start_wm_services() {
@@ -204,6 +223,8 @@ main() {
   # tmux plugins (tpm clones + the plugins it manages are gitignored)
   bootstrap_tmux_plugins
 
+  install_claude_code
+
   # Build bat's theme cache so custom themes (Catppuccin) are available
   command -v bat >/dev/null && bat cache --build >/dev/null
 
@@ -215,6 +236,8 @@ main() {
     mkdir -p "$HOME/.1password"
     ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" \
       "$HOME/.1password/agent.sock"
+
+    mkdir -p "$HOME/Projects"
 
     # process-compose reads Application Support on macOS (no ~/.config
     # fallback); point it at the stowed XDG-style config instead. Replace

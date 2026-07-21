@@ -11,6 +11,7 @@ vicmd_symbol = "[ V](bold green)"
 
 [aws]
 symbol = " "
+disabled = true
 
 [azure]
 symbol = " "
