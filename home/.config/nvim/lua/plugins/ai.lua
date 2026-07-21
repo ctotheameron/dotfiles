@@ -1,3 +1,22 @@
+-- pi is installed as a global npm package under the home-default asdf node.
+-- Projects that pin an older nodejs in .tool-versions (e.g. nova -> 20.x)
+-- break the asdf shim ("No version is set for command pi"), so sidekick
+-- launches pi with ASDF_NODEJS_VERSION pinned to the version in
+-- ~/.tool-versions. Degrades gracefully: no file / no nodejs line -> no env.
+local pi_env
+do
+  local tool_versions = vim.fn.expand("~/.tool-versions")
+  if vim.fn.filereadable(tool_versions) == 1 then
+    for _, line in ipairs(vim.fn.readfile(tool_versions)) do
+      local v = line:match("^nodejs%s+(%S+)")
+      if v then
+        pi_env = { ASDF_NODEJS_VERSION = v }
+        break
+      end
+    end
+  end
+end
+
 return {
 
   -- claudecode.nvim in "server only" mode: it runs the WebSocket MCP server
@@ -41,6 +60,7 @@ return {
         },
         tools = {
           claude = { cmd = { "claude", "--ide" } },
+          pi = { env = pi_env },
         },
       },
     },
