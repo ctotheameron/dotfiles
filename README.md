@@ -36,6 +36,9 @@ Secrets are never tracked, so after `install.sh` run:
 - 1Password app → Settings → Developer → "Integrate with 1Password CLI",
   then `op plugin init <tool>` for any shell plugins you want
 - `atuin import auto` — seed shell history (optionally `atuin login` for sync)
+- `pi` — authenticate on first run (creds land in `~/.pi/agent/auth.json`,
+  never tracked); it auto-installs its extension packages from the stowed
+  `~/.pi/agent/settings.json`
 - Recreate `~/.config/zsh/work.zsh` if it's a work machine
 
 ## BetterTouchTool (macOS)

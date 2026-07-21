@@ -3,6 +3,15 @@
 # Never commit credentials
 home/.config/gh/hosts.yml
 
+# pi: only settings.json is tracked. Credentials and machine state live as
+# real files in ~/.pi/agent/ — keep them out even if adopted/copied here
+home/.pi/agent/auth.json
+home/.pi/agent/models-store.json
+home/.pi/agent/npm/
+home/.pi/agent/sessions/
+home/.pi/agent/*-memory/
+home/.pi/agent/*.sqlite
+
 # Work-specific config stays local
 home/.config/zsh/work.zsh
 home/.config/git/work.gitconfig

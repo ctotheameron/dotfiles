@@ -173,6 +173,23 @@ install_claude_code() {
 }
 
 # ---------------------------------------------------------------------------
+# pi coding agent (npm global)
+# ---------------------------------------------------------------------------
+install_pi() {
+  # An npm global, so not in Brewfile/arch.txt. Its config is the stowed
+  # ~/.pi/agent/settings.json; on first run pi reads the packages list from
+  # it and reinstalls any missing extensions itself. Idempotent.
+  command -v pi >/dev/null && return 0
+  if ! command -v npm >/dev/null; then
+    log "Skipping pi: npm not found (asdf install nodejs first, then re-run)"
+    return 0
+  fi
+
+  log "Installing pi coding agent"
+  npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+}
+
+# ---------------------------------------------------------------------------
 # Services (macOS window-manager stack)
 # ---------------------------------------------------------------------------
 start_wm_services() {
@@ -224,6 +241,7 @@ main() {
   bootstrap_tmux_plugins
 
   install_claude_code
+  install_pi
 
   # Build bat's theme cache so custom themes (Catppuccin) are available
   command -v bat >/dev/null && bat cache --build >/dev/null

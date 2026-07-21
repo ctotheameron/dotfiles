@@ -1,0 +1,21 @@
+{
+  "lastChangelogVersion": "0.80.10",
+  "theme": "dark",
+  "packages": [
+    "npm:pi-claude-auth",
+    "npm:pi-mcp-adapter",
+    "npm:pi-subagents",
+    "npm:@hypabolic/pi-hypa",
+    "npm:pi-tool-display",
+    "npm:pi-hermes-memory",
+    "npm:@plannotator/pi-extension",
+    "npm:@quintinshaw/pi-dynamic-workflows",
+    "npm:@trashcodermaker/pi-pr-review-handler",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-zentui",
+    "npm:pi-thinking-box"
+  ],
+  "defaultThinkingLevel": "xhigh",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-fable-5"
+}
