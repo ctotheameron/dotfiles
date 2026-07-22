@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.10",
+  "lastChangelogVersion": "0.81.1",
   "theme": "catppuccin-tui-mocha",
   "packages": [
     "npm:pi-claude-auth",
@@ -16,11 +16,11 @@
     "npm:pi-thinking-box",
     "npm:pi-catppuccin-tui"
   ],
-  "defaultThinkingLevel": "xhigh",
+  "defaultThinkingLevel": "max",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-fable-5",
   "warnings": {
-    "anthropicExtraUsage": true
+    "anthropicExtraUsage": false
   },
   "quietStartup": true
 }
