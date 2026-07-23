@@ -2,16 +2,23 @@ style:
   name: 'Catppuccin Mocha'
   body:
     fgColor: '#cdd6f4'
-    bgColor: '#1e1e2e'
+    # 'default' = tcell.ColorDefault = the terminal's own background, which
+    # keeps ghostty's transparency. stat_table/proc_table need it explicitly
+    # too — their bgColor defaults to opaque 'black' when omitted.
+    bgColor: default
     secondaryTextColor: '#cba6f7'
     tertiaryTextColor: '#cba6f7'
-    borderColor: '#9399b2'
+    # borders can't be disabled (hardcoded SetBorders(true) in the TUI), so
+    # paint them mocha base to fade into the dark background
+    borderColor: '#1e1e2e'
   stat_table:
     keyFgColor: '#cba6f7'
     valueFgColor: '#cdd6f4'
     logoColor: '#cba6f7'
+    bgColor: default
   proc_table:
     fgColor: '#cdd6f4'
+    bgColor: default
     fgWarning: '#fab387'
     fgPending: '#9399b2'
     fgCompleted: '#a6e3a1'
