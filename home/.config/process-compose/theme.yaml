@@ -2,10 +2,12 @@ style:
   name: 'Catppuccin Mocha'
   body:
     fgColor: '#cdd6f4'
-    # 'default' = tcell.ColorDefault = the terminal's own background, which
-    # keeps ghostty's transparency. stat_table/proc_table need it explicitly
-    # too — their bgColor defaults to opaque 'black' when omitted.
-    bgColor: default
+    # opaque on purpose: tview paints the proc-table selection by inverting
+    # cell colors (bar text <- this bg), so a 'default' (transparent) bg makes
+    # the selected row's text render in the terminal's default fg — invisible
+    # on the light bar. Translucency comes from ghostty instead
+    # (background-opacity-cells = true).
+    bgColor: '#1e1e2e'
     secondaryTextColor: '#cba6f7'
     tertiaryTextColor: '#cba6f7'
     # borders can't be disabled (hardcoded SetBorders(true) in the TUI), so
@@ -15,10 +17,8 @@ style:
     keyFgColor: '#cba6f7'
     valueFgColor: '#cdd6f4'
     logoColor: '#cba6f7'
-    bgColor: default
   proc_table:
     fgColor: '#cdd6f4'
-    bgColor: default
     fgWarning: '#fab387'
     fgPending: '#9399b2'
     fgCompleted: '#a6e3a1'

@@ -27,6 +27,9 @@ window-theme = auto
 ################
 theme = Catppuccin Mocha
 background-opacity = 0.85
+# also apply opacity to cells with explicit background colors, so opaque
+# TUIs (process-compose, btop, lazygit selection bars) look translucent too
+background-opacity-cells = true
 background-blur-radius = 10
 cursor-style = block
 bold-is-bright = true
