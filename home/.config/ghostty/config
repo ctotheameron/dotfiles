@@ -44,8 +44,10 @@ font-size = 16
 ####################
 
 # ⌘+/ drops a terminal down from the top of the screen (like iTerm hotkey window)
-# ⌘+/ toggles the doom-style visor terminal from anywhere (global: makes it
-# system-wide on macOS; needs one-time Accessibility permission, see README)
+# ⌘+/ toggles the doom-style visor terminal from anywhere. `global:` makes it
+# system-wide: on macOS via a one-time Accessibility permission (see README),
+# on Linux via the XDG GlobalShortcuts portal — Hyprland additionally needs
+# the forwarding bind in arch/.config/hypr/bindings.conf.
 keybind = global:super+slash=toggle_quick_terminal
 quick-terminal-position = top
 
