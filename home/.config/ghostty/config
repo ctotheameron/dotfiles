@@ -44,7 +44,9 @@ font-size = 16
 ####################
 
 # ⌘+/ drops a terminal down from the top of the screen (like iTerm hotkey window)
-keybind = super+slash=toggle_quick_terminal
+# ⌘+/ toggles the doom-style visor terminal from anywhere (global: makes it
+# system-wide on macOS; needs one-time Accessibility permission, see README)
+keybind = global:super+slash=toggle_quick_terminal
 quick-terminal-position = top
 
 ###############

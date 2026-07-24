@@ -40,6 +40,9 @@ Secrets are never tracked, so after `install.sh` run:
   never tracked); it auto-installs its extension packages from the stowed
   `~/.pi/agent/settings.json`
 - Recreate `~/.config/zsh/work.zsh` if it's a work machine
+- Ghostty prompts for macOS Accessibility permission on first use of the
+  global quick-terminal keybind (⌘+/) — grant it in System Settings →
+  Privacy & Security → Accessibility
 
 ## BetterTouchTool (macOS)
 
