@@ -27,9 +27,10 @@ window-theme = auto
 ################
 theme = Catppuccin Mocha
 background-opacity = 0.85
-# also apply opacity to cells with explicit background colors, so opaque
-# TUIs (process-compose, btop, lazygit selection bars) look translucent too
-background-opacity-cells = true
+# NOTE: background-opacity-cells is a trap: explicit-bg cells get the alpha
+# but are composited over the already-translucent window bg, ending up ~98%
+# opaque (ghostty PR #11248, closed unmerged, would have fixed this). Not
+# worth setting until upstream lands a real fix.
 background-blur-radius = 10
 cursor-style = block
 bold-is-bright = true

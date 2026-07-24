@@ -2,12 +2,11 @@ style:
   name: 'Catppuccin Mocha'
   body:
     fgColor: '#cdd6f4'
-    # opaque on purpose: tview paints the proc-table selection by inverting
-    # cell colors (bar text <- this bg), so a 'default' (transparent) bg makes
-    # the selected row's text render in the terminal's default fg — invisible
-    # on the light bar. Translucency comes from ghostty instead
-    # (background-opacity-cells = true).
-    bgColor: '#1e1e2e'
+    # 'default' = the terminal's own background = transparent in ghostty.
+    # (ghostty's background-opacity-cells can't make explicit-bg cells
+    # translucent — see unmerged ghostty PR #11248 — so transparency must
+    # come from an unset background.)
+    bgColor: default
     secondaryTextColor: '#cba6f7'
     tertiaryTextColor: '#cba6f7'
     # borders can't be disabled (hardcoded SetBorders(true) in the TUI), so
@@ -18,7 +17,12 @@ style:
     valueFgColor: '#cdd6f4'
     logoColor: '#cba6f7'
   proc_table:
-    fgColor: '#cdd6f4'
+    # deliberately muted (mocha overlay1): tview paints the selected row by
+    # inverting cell colors — bar bg <- this fg, bar text <- the transparent
+    # table bg, which renders as the terminal's default fg (#cdd6f4). A light
+    # fgColor here would make the bar #cdd6f4-on-#cdd6f4 (invisible); overlay1
+    # keeps names readable and the selection bar light-on-gray.
+    fgColor: '#7f849c'
     fgWarning: '#fab387'
     fgPending: '#9399b2'
     fgCompleted: '#a6e3a1'
