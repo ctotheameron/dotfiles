@@ -45,13 +45,14 @@ return {
     opts = {
       cli = {
         win = {
+          layout = "left", -- AI terminal on the left, editor on the right
           -- Sidekick's default nav action is tmux-unaware: at the window edge
           -- it forwards the key into the terminal instead of handing off to
-          -- tmux. With the "right" layout only <c-l> hits that edge case, so
+          -- tmux. With the "left" layout only <c-h> hits that edge case, so
           -- only it needs the vim-tmux-navigator command; the other directions
           -- keep sidekick's defaults (plain window navigation).
           keys = {
-            nav_right = { "<c-l>", "TmuxNavigateRight", desc = "Navigate right (nvim/tmux)" },
+            nav_left = { "<c-h>", "TmuxNavigateLeft", desc = "Navigate left (nvim/tmux)" },
           },
         },
         mux = {
