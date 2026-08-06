@@ -98,13 +98,6 @@ for _plugin_dir in /opt/homebrew/share /usr/share/zsh/plugins; do
 done
 unset _plugin_dir
 
-# pi (coding agent): pin to the Node version where it is installed so
-# asdf resolves the binary in any project, even when .tool-versions
-# sets a different Node version.
-if command -v pi >/dev/null; then
-  pi() { ASDF_NODEJS_VERSION=26.2.0 command pi "$@"; }
-fi
-
 # Keybinds. autosuggest-* widgets only exist after zsh-autosuggestions loads,
 # so these must come after the plugin loop above. Alt-j is left free for the
 # sesh picker (see sesh.zsh).
