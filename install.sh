@@ -129,6 +129,49 @@ stow_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# asdf runtimes (.tool-versions)
+# ---------------------------------------------------------------------------
+bootstrap_asdf_tools() {
+  # ~/.tool-versions is stowed, but asdf still needs each plugin added and each
+  # version installed before the shims work. Skip this and a shim such as
+  # python3 shadows the real binary, then exits 126 with "No version is set for
+  # command python3". Idempotent: plugin add and install both no-op when the
+  # plugin or the version is already there.
+  command -v asdf >/dev/null || return 0
+
+  local tool_versions="$HOME/.tool-versions"
+  [ -f "$tool_versions" ] || return 0
+
+  local plugin version installed
+  while read -r plugin version _ || [ -n "$plugin" ]
+  do
+    # skip blank lines and comments
+    [ -n "$plugin" ] || continue
+    [ "${plugin#\#}" = "$plugin" ] || continue
+
+    asdf plugin add "$plugin" >/dev/null 2>&1 || true
+
+    # asdf list indents each version and marks the active one with '*'
+    installed="$(asdf list "$plugin" 2>/dev/null | tr -d ' *' || true)"
+    if printf '%s\n' "$installed" | grep -qxF "$version"
+    then
+      continue
+    fi
+
+    log "Installing $plugin $version (asdf)"
+    asdf install "$plugin" "$version" ||
+      log "Failed: asdf install $plugin $version"
+  done <"$tool_versions"
+
+  # Later steps (install_pi needs npm) run in this shell, which never sourced
+  # .zshrc — so put the shims on PATH here.
+  if [ "${PATH#*"$HOME/.asdf/shims"}" = "$PATH" ]
+  then
+    export PATH="$HOME/.asdf/shims:$PATH"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # tmux plugins (tpm)
 # ---------------------------------------------------------------------------
 bootstrap_tmux_plugins() {
@@ -236,6 +279,10 @@ main() {
   esac
 
   stow_packages
+
+  # asdf plugins/versions for the stowed ~/.tool-versions (the runtimes
+  # themselves are not tracked, so a fresh machine has shims but no versions)
+  bootstrap_asdf_tools
 
   # tmux plugins (tpm clones + the plugins it manages are gitignored)
   bootstrap_tmux_plugins
