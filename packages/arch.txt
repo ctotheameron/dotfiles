@@ -1,5 +1,17 @@
 # Official repo packages (pacman) — cross-platform equivalents of the Brewfile.
 # Lines starting with # are ignored.
+# Build deps for `asdf install python` (python-build) — see the Brewfile.
+# Most come with a base Arch install, but list them so the build never
+# quietly drops stdlib modules such as ssl, sqlite3, lzma and readline.
+base-devel
+bzip2
+libffi
+ncurses
+openssl
+readline
+sqlite
+xz
+zlib
 atuin
 aws-cli
 bat
