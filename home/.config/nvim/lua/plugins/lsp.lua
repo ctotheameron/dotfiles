@@ -94,12 +94,79 @@ end
 local CURSOR_LINE = { current_line = true, format = format_virtual_line }
 local EVERY_LINE = { format = format_virtual_line }
 
+-- Virtual lines appear only while the cursor sits inside the range of a
+-- diagnostic, and not merely somewhere on its line.
+--
+-- Neovim offers no option for this. `format` cannot do it either, because
+-- Neovim calls format once per `show`, and its own CursorMoved autocmd then
+-- redraws from that cached result. So this gate needs an autocmd.
+local gate = {
+  every_line = false, -- the <leader>uv toggle owns this
+  inside = nil, -- last answer, so the config only changes on a change
+  vt_all = nil, -- LazyVim's virtual_text, on every line
+  vt_off_cursor = nil, -- the same, but not on the cursor line
+}
+
+--- True while the cursor sits inside the range of a diagnostic. Neovim treats
+--- end_col as one past the end, and a zero width range still covers one cell.
+---@return boolean
+local function cursor_inside_diagnostic()
+  local win = vim.api.nvim_get_current_win()
+  local pos = vim.api.nvim_win_get_cursor(win)
+  local lnum, col = pos[1] - 1, pos[2]
+
+  -- Only diagnostics that start on this line, which is what `current_line`
+  -- draws as well.
+  for _, d in ipairs(vim.diagnostic.get(vim.api.nvim_get_current_buf(), { lnum = lnum })) do
+    local last = math.max((d.end_col or d.col) - 1, d.col)
+    if d.end_lnum and d.end_lnum > lnum then
+      last = math.huge -- the range runs past the end of this line
+    end
+    if col >= d.col and col <= last then
+      return true
+    end
+  end
+
+  return false
+end
+
+---@param force boolean? apply even when the answer did not change
+local function apply_gate(force)
+  -- Read LazyVim's virtual_text once, before this file changes it.
+  if not gate.vt_all then
+    local base = vim.diagnostic.config().virtual_text
+    base = type(base) == "table" and vim.deepcopy(base) or {}
+    base.current_line = nil
+    gate.vt_all = base
+    gate.vt_off_cursor = vim.tbl_extend("force", base, { current_line = false })
+  end
+
+  if gate.every_line then
+    vim.diagnostic.config({ virtual_lines = EVERY_LINE, virtual_text = false })
+    return
+  end
+
+  local inside = cursor_inside_diagnostic()
+  if inside == gate.inside and not force then
+    return
+  end
+  gate.inside = inside
+
+  vim.diagnostic.config({
+    virtual_lines = inside and CURSOR_LINE or false,
+    -- Off the range the inline text has to come back. Without it the cursor
+    -- line would show no message at all.
+    virtual_text = inside and gate.vt_off_cursor or gate.vt_all,
+  })
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
     opts = {
       diagnostics = {
-        -- The full wrapped message, under the cursor line only.
+        -- The full wrapped message, under the cursor line only. apply_gate
+        -- narrows this further, down to the columns of the diagnostic.
         virtual_lines = CURSOR_LINE,
         -- `false` means "every line except the cursor line". This stops the
         -- inline text and the virtual lines from repeating one message.
@@ -141,27 +208,22 @@ return {
     -- above stay as they are.
     "neovim/nvim-lspconfig",
     opts = function()
-      -- LazyVim owns the normal virtual_text values, so read them at run time
-      -- instead of copying them here.
-      local saved_virtual_text
+      vim.api.nvim_create_autocmd({ "CursorMoved", "DiagnosticChanged", "BufEnter", "WinEnter" }, {
+        group = vim.api.nvim_create_augroup("diagnostic_virtual_lines_gate", { clear = true }),
+        callback = function()
+          apply_gate()
+        end,
+      })
 
       Snacks.toggle({
         name = "Diagnostic Virtual Lines (all lines)",
         get = function()
-          local vl = vim.diagnostic.config().virtual_lines
-          return vl ~= false and not (type(vl) == "table" and vl.current_line)
+          return gate.every_line
         end,
         set = function(state)
-          if state then
-            saved_virtual_text = saved_virtual_text or vim.diagnostic.config().virtual_text
-            -- Inline text off, because every line now carries its full message.
-            vim.diagnostic.config({ virtual_lines = EVERY_LINE, virtual_text = false })
-          else
-            vim.diagnostic.config({
-              virtual_lines = CURSOR_LINE,
-              virtual_text = saved_virtual_text,
-            })
-          end
+          gate.every_line = state
+          gate.inside = nil -- force the next gate check to write the config
+          apply_gate(true)
         end,
       }):map("<leader>uv")
     end,

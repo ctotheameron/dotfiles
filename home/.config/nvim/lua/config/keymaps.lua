@@ -17,6 +17,26 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half-page up (centered)" })
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev search result (centered)" })
 
+-- Diagnostic jumps without the float. LazyVim passes `float = true`, so `]d`
+-- showed each message twice: once in a float, and once in the virtual lines
+-- under the cursor line. vim.diagnostic.jump opens no float of its own, so
+-- these maps only drop that flag. `<leader>cd` still opens the float by hand.
+local function diagnostic_jump(count, severity)
+  return function()
+    vim.diagnostic.jump({
+      count = count * vim.v.count1,
+      severity = severity and vim.diagnostic.severity[severity] or nil,
+    })
+  end
+end
+
+vim.keymap.set("n", "]d", diagnostic_jump(1), { desc = "Next Diagnostic" })
+vim.keymap.set("n", "[d", diagnostic_jump(-1), { desc = "Prev Diagnostic" })
+vim.keymap.set("n", "]e", diagnostic_jump(1, "ERROR"), { desc = "Next Error" })
+vim.keymap.set("n", "[e", diagnostic_jump(-1, "ERROR"), { desc = "Prev Error" })
+vim.keymap.set("n", "]w", diagnostic_jump(1, "WARN"), { desc = "Next Warning" })
+vim.keymap.set("n", "[w", diagnostic_jump(-1, "WARN"), { desc = "Prev Warning" })
+
 -- Paste over selection without clobbering the yank register
 vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste (keep register)" })
 
