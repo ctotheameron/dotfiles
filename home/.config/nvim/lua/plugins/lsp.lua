@@ -18,7 +18,7 @@ local GUTTER = 6
 -- A deeply indented diagnostic leaves very little room. Below this floor the
 -- text becomes a narrow ribbon, so the block is allowed to pass WIDTH instead.
 -- Set this to 1 to hold the 80 column limit at every indent.
-local MIN_WIDTH = 30
+local MIN_WIDTH = 50
 
 --- Greedy word wrap. A word that is wider than the limit is cut, so no line
 --- ever passes the limit. The cut counts characters, so it keeps multi-byte
