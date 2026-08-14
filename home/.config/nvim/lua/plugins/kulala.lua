@@ -15,28 +15,25 @@ return {
     event = { "SessionLoadPost", "VimLeavePre" },
     ft = { "http", "rest" },
 
+    -- These entries only wake the plugin. kulala then binds the real action,
+    -- because global_keymaps is true below. Without that flag the keys load
+    -- kulala and then do nothing at all.
     keys = {
       { "<leader>R", "", desc = "+rest" },
       { "<leader>Rs", desc = "Send request" },
       { "<leader>Ra", desc = "Send all requests" },
+      { "<leader>Re", desc = "Select environment" },
+      { "<leader>Ru", desc = "Manage auth config" },
       { "<leader>Rb", desc = "Open scratchpad" },
-      {
-        "<leader>Re",
-        function()
-          require("kulala").set_selected_env()
-        end,
-        desc = "Select environment",
-      },
-      {
-        "<leader>Rc",
-        function()
-          require("kulala").copy()
-        end,
-        desc = "Copy as curl",
-      },
+      { "<leader>Rf", desc = "Find request" },
+      { "<leader>Ri", desc = "Inspect current request" },
     },
 
     opts = {
+      -- Bind kulala's own keymap set under <leader>R. Off by default.
+      global_keymaps = true,
+      global_keymaps_prefix = "<leader>R",
+
       -- Show the response beside the request, not below it.
       display_mode = "split",
       split_direction = "vertical",
