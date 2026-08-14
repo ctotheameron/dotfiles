@@ -40,6 +40,8 @@ brew 'mysql-client@8.0', link: true
 brew 'neovim'
 brew 'nginx'
 brew 'tmux'
+# kulala.nvim builds its tree-sitter-http parser from the bundled grammar
+brew 'tree-sitter-cli'
 brew 'overmind'
 brew 'postgresql@18', link: true
 brew 'sesh'

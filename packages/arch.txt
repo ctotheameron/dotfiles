@@ -32,6 +32,8 @@ neovim
 starship
 stow
 tmux
+# kulala.nvim builds its tree-sitter-http parser from the bundled grammar
+tree-sitter-cli
 zoxide
 zsh-autosuggestions
 zsh-syntax-highlighting
