@@ -1,5 +1,8 @@
 tt.*
 .tests
+# Compiled spell file. The .add source is tracked, and config/options.lua
+# rebuilds this one when it is missing or stale.
+spell/*.spl
 doc/tags
 debug
 .repro
