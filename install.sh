@@ -129,6 +129,27 @@ stow_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# Mail (aerc + mbsync + notmuch)
+# ---------------------------------------------------------------------------
+setup_mail() {
+  # mbsync writes here, notmuch indexes it, aerc reads it. mbsync does not
+  # create the root store, so make it first. Mail itself stays out of the repo.
+  command -v mbsync >/dev/null || return 0
+
+  mkdir -p "$HOME/Mail/icloud"
+
+  # aerc refuses an accounts.conf that group or other can read. git records
+  # only the exec bit, so a fresh clone lands at 644 and aerc stops. The file
+  # holds no password of its own, because rbw fetches it at send time.
+  local accounts="$HOME/.config/aerc/accounts.conf"
+  [ -f "$accounts" ] && chmod 600 "$accounts"
+
+  command -v notmuch >/dev/null && notmuch new >/dev/null 2>&1
+
+  log "Mail ready. Run 'rbw login' and store the iCloud app password."
+}
+
+# ---------------------------------------------------------------------------
 # asdf runtimes (.tool-versions)
 # ---------------------------------------------------------------------------
 bootstrap_asdf_tools() {
@@ -289,6 +310,7 @@ main() {
 
   install_claude_code
   install_pi
+  setup_mail
 
   # Build bat's theme cache so custom themes (Catppuccin) are available
   command -v bat >/dev/null && bat cache --build >/dev/null
@@ -310,6 +332,13 @@ main() {
     pc_dir="$HOME/Library/Application Support/process-compose"
     [ -L "$pc_dir" ] || rm -rf "$pc_dir"
     ln -sfn "$HOME/.config/process-compose" "$pc_dir"
+
+    # aerc reads ~/Library/Preferences on macOS and never looks at ~/.config,
+    # so point it at the stowed config. It copies its own defaults in on first
+    # run, so replace any real dir it made (ln alone will not).
+    aerc_dir="$HOME/Library/Preferences/aerc"
+    [ -L "$aerc_dir" ] || rm -rf "$aerc_dir"
+    ln -sfn "$HOME/.config/aerc" "$aerc_dir"
   fi
 
   log "Done. Restart your shell."

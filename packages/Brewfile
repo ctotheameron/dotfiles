@@ -4,6 +4,12 @@ tap 'felixkratz/formulae'
 tap 'shaunsingh/sfmono-nerd-font-ligaturized'
 tap 'theboredteam/boring-notch'
 tap 'withgraphite/tap'
+brew 'aerc'
+# Terminal mail stack: mbsync pulls iCloud into ~/Mail, notmuch indexes it,
+# rbw reads the app password from Bitwarden. See home/.config/isyncrc.
+brew 'isync'
+brew 'notmuch'
+brew 'rbw'
 brew 'asdf'
 # Build deps for `asdf install python` (python-build). Without them the build
 # quietly drops stdlib modules such as ssl, sqlite3, lzma and readline.

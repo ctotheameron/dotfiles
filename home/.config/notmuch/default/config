@@ -1,0 +1,24 @@
+# notmuch indexes the maildir that mbsync writes. aerc then searches it.
+#
+# notmuch expands neither ~ nor $HOME. It does treat a relative path as
+# relative to $HOME, so "Mail" stays correct on macOS and on Arch. An absolute
+# path would hardcode /Users/cameron and break the Linux machine.
+
+[database]
+path=Mail
+
+[user]
+name=Cameron Austgen
+primary_email=cameron.austgen@me.com
+
+[new]
+# mbsync writes these while it syncs. Indexing them serves no purpose.
+tags=unread;inbox
+ignore=.uidvalidity;.mbsyncstate;.mbsyncstate.new;.mbsyncstate.journal
+
+[search]
+exclude_tags=deleted;spam
+
+[maildir]
+# Write maildir flags back, so a read message stays read after the next sync.
+synchronize_flags=true

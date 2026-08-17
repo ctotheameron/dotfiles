@@ -1,0 +1,45 @@
+# mbsync: pull iCloud mail into a local maildir.
+#
+# mbsync 1.5 reads $XDG_CONFIG_HOME/isyncrc first, then ~/.mbsyncrc. So this
+# file must sit at ~/.config/isyncrc, not ~/.config/isync/mbsyncrc.
+#
+# Apple forces two factor auth, so a normal password never works over IMAP.
+# Make an app specific password at appleid.apple.com, store it in Bitwarden,
+# and rbw hands it over here. No secret lands on disk.
+
+IMAPAccount icloud
+Host imap.mail.me.com
+Port 993
+# Apple documents the name part for icloud.com addresses. A full address works
+# for many @me.com accounts. Swap to "cameron.austgen" if auth fails.
+User cameron.austgen@me.com
+PassCmd "rbw get 'iCloud app password'"
+TLSType IMAPS
+TLSVersions +1.2 +1.3
+# Homebrew builds isync against the macOS system SASL, and no cyrus-sasl comes
+# with it. Without an explicit mechanism, mbsync stops with "Unable to find a
+# callback: 18944" before it ever sends the password. LOGIN skips SASL, and
+# TLS already protects the exchange. iCloud advertises PLAIN, and that works
+# too, but it goes back through the same SASL layer.
+AuthMechs LOGIN
+# Apple drops connections that open too many streams at once.
+PipelineDepth 1
+
+IMAPStore icloud-remote
+Account icloud
+
+MaildirStore icloud-local
+Path ~/Mail/icloud/
+Inbox ~/Mail/icloud/INBOX
+# iCloud folder names carry spaces, such as "Sent Messages". Verbatim keeps
+# them as they are, so aerc and the web client agree.
+SubFolders Verbatim
+
+Channel icloud
+Far :icloud-remote:
+Near :icloud-local:
+# Notes is not mail. It shows over IMAP, and it only adds noise here.
+Patterns * !"Notes"
+Create Both
+Expunge Both
+SyncState *

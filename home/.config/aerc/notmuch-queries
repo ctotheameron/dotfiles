@@ -1,0 +1,12 @@
+# Sidebar rows for the notmuch backend. Left of the equals sign is the label
+# aerc shows. Right of it is the notmuch query.
+Inbox=tag:inbox and not tag:deleted
+Unread=tag:unread and not tag:deleted
+Today=date:today and not tag:deleted
+Flagged=tag:flagged
+Sent=folder:"icloud/Sent Messages"
+Drafts=folder:"icloud/Drafts"
+Archive=folder:"icloud/Archive"
+Junk=folder:"icloud/Junk"
+Trash=folder:"icloud/Deleted Messages"
+All=not tag:deleted

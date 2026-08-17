@@ -12,6 +12,12 @@ readline
 sqlite
 xz
 zlib
+aerc
+# Terminal mail stack: mbsync pulls iCloud into ~/Mail, notmuch indexes it,
+# rbw reads the app password from Bitwarden. See home/.config/isyncrc.
+isync
+notmuch
+rbw
 atuin
 aws-cli
 bat
