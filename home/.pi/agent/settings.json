@@ -1,8 +1,10 @@
 {
-  "lastChangelogVersion": "0.81.1",
+  "lastChangelogVersion": "0.83.0",
   "theme": "catppuccin-tui-mocha",
+  "__//disabled": [
+    "npm:pi-claude-auth"
+  ],
   "packages": [
-    "npm:pi-claude-auth",
     "npm:pi-mcp-adapter",
     "npm:pi-subagents",
     "npm:@hypabolic/pi-hypa",
@@ -14,13 +16,16 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-zentui",
     "npm:pi-thinking-box",
-    "npm:pi-catppuccin-tui"
+    "npm:pi-catppuccin-tui",
+    "npm:@petechu/pi-extension-toggle",
+    "npm:agent-ste"
   ],
   "defaultThinkingLevel": "max",
   "defaultProvider": "anthropic",
-  "defaultModel": "claude-fable-5",
+  "defaultModel": "claude-opus-5",
   "warnings": {
     "anthropicExtraUsage": false
   },
-  "quietStartup": true
+  "quietStartup": true,
+  "hideThinkingBlock": false
 }
