@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Fetch mail and re-index it.
+#
+# mbsync writes to the maildir. notmuch then has to index it, or aerc shows
+# nothing new, because the notmuch backend reads the index and not the files.
+#
+# Usage:
+#   mail-sync            every channel in ~/.config/isyncrc
+#   mail-sync icloud     one channel
+#
+# A lock keeps two runs apart. notmuch takes a write lock on its database, so
+# three accounts on a five minute timer would otherwise collide.
+
+set -uo pipefail
+
+channel="${1:-}"
+lock="${TMPDIR:-/tmp}/mail-sync.lock"
+
+# No flock on macOS, so use a directory as the lock. mkdir is atomic on both.
+if ! mkdir "$lock" 2>/dev/null; then
+  # Clear a lock left behind by a killed run.
+  if [ -d "$lock" ] && [ -n "$(find "$lock" -maxdepth 0 -mmin +30 2>/dev/null)" ]; then
+    rmdir "$lock" 2>/dev/null || true
+    mkdir "$lock" 2>/dev/null || exit 0
+  else
+    exit 0
+  fi
+fi
+trap 'rmdir "$lock" 2>/dev/null || true' EXIT
+
+if [ -n "$channel" ]; then
+  mbsync "$channel"
+else
+  mbsync -a
+fi
+status=$?
+
+# Index whatever arrived, even when one channel failed. The others still
+# fetched mail worth reading.
+command -v notmuch >/dev/null && notmuch new >/dev/null
+
+exit "$status"
