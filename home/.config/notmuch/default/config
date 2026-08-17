@@ -12,8 +12,14 @@ name=Cameron Austgen
 primary_email=cameron.austgen@me.com
 
 [new]
+# No "inbox" tag here. These tags land on every new message, so tagging inbox
+# would mark Archive, Sent and Trash as inbox too. The sidebar asks by folder
+# instead, and mbsync keeps the folders right.
+#
+# "unread" is safe, because maildir.synchronize_flags below clears it for mail
+# already marked seen on the server.
+tags=unread
 # mbsync writes these while it syncs. Indexing them serves no purpose.
-tags=unread;inbox
 ignore=.uidvalidity;.mbsyncstate;.mbsyncstate.new;.mbsyncstate.journal
 
 [search]
