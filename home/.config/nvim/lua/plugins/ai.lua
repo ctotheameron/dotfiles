@@ -1,16 +1,28 @@
--- pi is installed as a global npm package under the home-default asdf node.
--- Projects that pin an older nodejs in .tool-versions (e.g. nova -> 20.x)
--- break the asdf shim ("No version is set for command pi"), so sidekick
--- launches pi with ASDF_NODEJS_VERSION pinned to the version in
--- ~/.tool-versions. Degrades gracefully: no file / no nodejs line -> no env.
-local pi_env
+-- pi is installed as a global npm package under the home-default asdf node and
+-- needs node >=22.19.
+--
+-- Projects that pin an older nodejs in .tool-versions break the asdf shim
+-- ("No version is set for command pi"), so launch pi by absolute path out of
+-- the home-default install.
+local pi_cmd
+
 do
   local tool_versions = vim.fn.expand("~/.tool-versions")
+
+  -- An `if` block, not an early `return`. A bare return inside `do ... end`
+  -- leaves the whole chunk, so this file would hand lazy.nvim nil instead of
+  -- the spec below, and every plugin here would go missing without a word.
   if vim.fn.filereadable(tool_versions) == 1 then
     for _, line in ipairs(vim.fn.readfile(tool_versions)) do
       local v = line:match("^nodejs%s+(%S+)")
+
       if v then
-        pi_env = { ASDF_NODEJS_VERSION = v }
+        local bin = vim.fn.expand("~/.asdf/installs/nodejs/" .. v .. "/bin")
+
+        if vim.fn.executable(bin .. "/node") == 1 and vim.fn.filereadable(bin .. "/pi") == 1 then
+          pi_cmd = { bin .. "/node", bin .. "/pi" }
+        end
+
         break
       end
     end
@@ -23,11 +35,13 @@ return {
   {
     "coder/claudecode.nvim",
     event = "VeryLazy", -- load eagerly so the server starts and writes the lock file
+
     opts = {
       terminal = {
         provider = "none", -- no windows/terminals; server + tools only
       },
     },
+
     keys = {
       -- diff review for edits Claude proposes over the MCP connection
       { "<leader>aA", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Claude: Accept diff" },
@@ -46,6 +60,7 @@ return {
       cli = {
         win = {
           layout = "left", -- AI terminal on the left, editor on the right
+
           -- Sidekick's default nav action is tmux-unaware: at the window edge
           -- it forwards the key into the terminal instead of handing off to
           -- tmux. With the "left" layout only <c-h> hits that edge case, so
@@ -55,13 +70,15 @@ return {
             nav_left = { "<c-h>", "TmuxNavigateLeft", desc = "Navigate left (nvim/tmux)" },
           },
         },
+
         mux = {
           backend = "tmux",
           enabled = true,
         },
+
         tools = {
           claude = { cmd = { "claude", "--ide" } },
-          pi = { env = pi_env },
+          pi = { cmd = pi_cmd },
         },
       },
     },
