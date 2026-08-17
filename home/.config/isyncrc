@@ -12,8 +12,12 @@ Host imap.mail.me.com
 Port 993
 # Apple documents the name part for icloud.com addresses. A full address works
 # for many @me.com accounts. Swap to "cameron.austgen" if auth fails.
-User cameron.austgen@me.com
-PassCmd "rbw get 'iCloud app password'"
+User cameron.austgen
+# tr strips whitespace. Apple shows the app password as xxxx-xxxx-xxxx-xxxx,
+# and a copy and paste easily carries a leading space or a trailing newline.
+# The server then answers AUTHENTICATIONFAILED, which reads like a wrong
+# password. Both the dashed and the undashed form authenticate.
+PassCmd "rbw get 'iCloud app password' | tr -d '[:space:]'"
 TLSType IMAPS
 TLSVersions +1.2 +1.3
 # Homebrew builds isync against the macOS system SASL, and no cyrus-sasl comes
