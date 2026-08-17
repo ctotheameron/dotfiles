@@ -5,3 +5,5 @@ sesh-bin
 opencode-bin
 graphite-cli
 1password-cli
+# alpine is not in the official repos. See the mail note in arch.txt.
+alpine

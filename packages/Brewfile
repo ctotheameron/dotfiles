@@ -5,6 +5,8 @@ tap 'shaunsingh/sfmono-nerd-font-ligaturized'
 tap 'theboredteam/boring-notch'
 tap 'withgraphite/tap'
 brew 'aerc'
+# Alpine has no maildir support, so it reads iCloud over IMAP directly.
+brew 'alpine'
 # Terminal mail stack: mbsync pulls iCloud into ~/Mail, notmuch indexes it,
 # rbw reads the app password from Bitwarden. See home/.config/isyncrc.
 brew 'isync'
