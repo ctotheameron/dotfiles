@@ -13,6 +13,8 @@ sqlite
 xz
 zlib
 aerc
+# aerc's bundled html filter shells out to w3m to render HTML mail
+w3m
 # Terminal mail stack: mbsync pulls iCloud into ~/Mail, notmuch indexes it,
 # rbw reads the app password from Bitwarden. See home/.config/isyncrc.
 isync

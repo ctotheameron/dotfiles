@@ -30,3 +30,7 @@ home/.config/tmux/plugins/
 # Karabiner writes a dated copy every time the config changes. The app
 # regenerates them, so they are machine-local state.
 macos/.config/karabiner/automatic_backups/
+
+# aerc copies its default binds.conf into the config dir on first run.
+# It matches the shipped defaults, so there is nothing to track.
+home/.config/aerc/binds.conf
