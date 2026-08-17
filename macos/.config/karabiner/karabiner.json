@@ -1,21 +1,20 @@
 {
+    "global": { "show_in_menu_bar": false },
     "profiles": [
         {
-            "name": "Default",
-            "selected": true,
             "complex_modifications": {
                 "rules": [
                     {
                         "description": "Caps Lock → Escape (tapped) / Control (held)",
                         "manipulators": [
                             {
-                                "type": "basic",
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "left_control" }],
-                                "to_if_alone": [{ "key_code": "escape" }]
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
                             }
                         ]
                     },
@@ -23,18 +22,20 @@
                         "description": "Return → Return (tapped) / Control (held)",
                         "manipulators": [
                             {
-                                "type": "basic",
                                 "from": {
                                     "key_code": "return_or_enter",
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "left_control" }],
-                                "to_if_alone": [{ "key_code": "return_or_enter" }]
+                                "to_if_alone": [{ "key_code": "return_or_enter" }],
+                                "type": "basic"
                             }
                         ]
                     }
                 ]
             },
+            "name": "Default",
+            "selected": true,
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]

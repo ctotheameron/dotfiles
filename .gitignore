@@ -26,3 +26,7 @@ home/.config/lazygit/state.yml
 
 # tpm manages these clones; tpm install_plugins restores them
 home/.config/tmux/plugins/
+
+# Karabiner writes a dated copy every time the config changes. The app
+# regenerates them, so they are machine-local state.
+macos/.config/karabiner/automatic_backups/
