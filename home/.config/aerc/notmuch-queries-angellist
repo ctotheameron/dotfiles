@@ -1,0 +1,13 @@
+# Sidebar rows for the angellist account. Every query is scoped to that account's
+# maildir, because one notmuch database indexes all three mailboxes.
+#
+# Gmail uses labels, so the special folders sit under "[Gmail]/".
+Inbox=folder:"angellist/INBOX" and not tag:deleted
+Unread=folder:"angellist/" and tag:unread and not tag:deleted
+Today=folder:"angellist/" and date:today and not tag:deleted
+Flagged=folder:"angellist/" and tag:flagged
+Sent=folder:"angellist/[Gmail]/Sent Mail"
+Drafts=folder:"angellist/[Gmail]/Drafts"
+Spam=folder:"angellist/[Gmail]/Spam"
+Trash=folder:"angellist/[Gmail]/Trash"
+All=folder:"angellist/" and not tag:deleted

@@ -1,0 +1,13 @@
+# Sidebar rows for the gmail account. Every query is scoped to that account's
+# maildir, because one notmuch database indexes all three mailboxes.
+#
+# Gmail uses labels, so the special folders sit under "[Gmail]/".
+Inbox=folder:"gmail/INBOX" and not tag:deleted
+Unread=folder:"gmail/" and tag:unread and not tag:deleted
+Today=folder:"gmail/" and date:today and not tag:deleted
+Flagged=folder:"gmail/" and tag:flagged
+Sent=folder:"gmail/[Gmail]/Sent Mail"
+Drafts=folder:"gmail/[Gmail]/Drafts"
+Spam=folder:"gmail/[Gmail]/Spam"
+Trash=folder:"gmail/[Gmail]/Trash"
+All=folder:"gmail/" and not tag:deleted

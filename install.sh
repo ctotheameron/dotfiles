@@ -136,7 +136,8 @@ setup_mail() {
   # create the root store, so make it first. Mail itself stays out of the repo.
   command -v mbsync >/dev/null || return 0
 
-  mkdir -p "$HOME/Mail/icloud"
+  # One directory per account in ~/.config/isyncrc.
+  mkdir -p "$HOME/Mail/icloud" "$HOME/Mail/gmail" "$HOME/Mail/angellist"
 
   # aerc refuses an accounts.conf that group or other can read. git records
   # only the exec bit, so a fresh clone lands at 644 and aerc stops. The file
@@ -146,7 +147,8 @@ setup_mail() {
 
   command -v notmuch >/dev/null && notmuch new >/dev/null 2>&1
 
-  log "Mail ready. Run 'rbw login' and store the iCloud app password."
+  log "Mail ready. Run 'rbw login', then store these Bitwarden items:"
+  log "  iCloud app password, Gmail app password, AngelList app password"
 }
 
 # ---------------------------------------------------------------------------
