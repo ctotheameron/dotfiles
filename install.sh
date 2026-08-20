@@ -256,6 +256,32 @@ install_pi() {
 }
 
 # ---------------------------------------------------------------------------
+# herdr (agent multiplexer)
+# ---------------------------------------------------------------------------
+bootstrap_herdr() {
+  # herdr itself comes from Brewfile/aur.txt. Its plugin clone and its agent
+  # integrations live outside the repo, so restore them here. Idempotent:
+  # `plugin install` re-pins the same repo, and each `integration install`
+  # rewrites its own hook.
+  command -v herdr >/dev/null || return 0
+
+  log "Setting up herdr"
+
+  # ctrl+hjkl navigation across nvim splits and herdr panes. The keys are
+  # bound in the stowed config.toml, and nvim/lua/plugins/tmux-navigator.lua
+  # holds the editor half.
+  herdr plugin install paulbkim-dev/vim-herdr-navigation -y >/dev/null 2>&1 ||
+    log "herdr: vim-herdr-navigation install failed (check network)"
+
+  # Report real agent lifecycle state to the sidebar, per agent CLI present.
+  for agent in pi claude opencode codex; do
+    command -v "$agent" >/dev/null || continue
+    herdr integration install "$agent" >/dev/null 2>&1 ||
+      log "herdr: $agent integration failed"
+  done
+}
+
+# ---------------------------------------------------------------------------
 # Services (macOS window-manager stack)
 # ---------------------------------------------------------------------------
 start_wm_services() {
@@ -312,6 +338,10 @@ main() {
 
   install_claude_code
   install_pi
+
+  # herdr plugin + agent integrations (both live outside the repo)
+  bootstrap_herdr
+
   setup_mail
 
   # Build bat's theme cache so custom themes (Catppuccin) are available

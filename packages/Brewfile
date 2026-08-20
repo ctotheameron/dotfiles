@@ -35,6 +35,9 @@ brew 'gh'
 brew 'git'
 brew 'git-delta'
 brew 'go'
+# Agent multiplexer (herdr.dev). pi-subagents reports async-run counts to its
+# panes and opens run inspectors in it, so keep it at 0.7.5 or newer.
+brew 'herdr'
 brew 'ical-buddy'
 brew 'imagemagick@6', link: true
 brew 'jq'

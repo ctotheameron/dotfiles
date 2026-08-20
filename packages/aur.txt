@@ -1,6 +1,9 @@
 # AUR packages (installed with yay/paru if available).
 # Lines starting with # are ignored.
 asdf-vm
+# Agent multiplexer, the Brewfile counterpart. herdr-bin tracks the same
+# release as the Homebrew formula. The plain `herdr` AUR package lags behind.
+herdr-bin
 sesh-bin
 opencode-bin
 graphite-cli

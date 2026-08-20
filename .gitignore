@@ -27,6 +27,18 @@ home/.config/lazygit/state.yml
 # tpm manages these clones; tpm install_plugins restores them
 home/.config/tmux/plugins/
 
+# herdr: only config.toml is tracked. The server writes its sockets, logs,
+# session state and plugin clones into this same directory, because stow
+# folds it into one symlink. install.sh restores the plugins.
+home/.config/herdr/*
+!home/.config/herdr/config.toml
+
+# `herdr integration install opencode` generates these two files plus its own
+# tui.jsonc. install.sh re-runs that command, so keep them untracked.
+home/.config/opencode/herdr-tui-session.js
+home/.config/opencode/plugins/
+home/.config/opencode/tui.jsonc
+
 # Karabiner writes a dated copy every time the config changes. The app
 # regenerates them, so they are machine-local state.
 macos/.config/karabiner/automatic_backups/

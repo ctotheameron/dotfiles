@@ -1,0 +1,94 @@
+# herdr — terminal workspace manager for AI coding agents
+# https://herdr.dev · full reference: https://herdr.dev/docs/configuration/
+#
+# Tuned to match ~/.config/tmux/tmux.conf. Herdr keeps its own defaults for
+# anything tmux does the same way, so this file holds only the differences.
+# Apply edits to a running server with `herdr server reload-config`.
+
+[theme]
+# Follow the host terminal palette, the same way tmux uses bg=default and
+# named colors. ghostty's Catppuccin theme and its 0.85 transparency win.
+name = "catppuccin"
+
+auto_switch = false
+[theme.custom]
+# Never paint a panel background; an explicit background cell renders opaque
+# in ghostty and would kill the transparency.
+panel_bg = "reset"
+
+[terminal]
+# tmux runs `exec zsh` in every pane, because omarchy's login shell is bash.
+default_shell = "zsh"
+
+[keys]
+# Same prefix as tmux. `prefix+?` lists every active binding.
+prefix = "ctrl+b"
+
+# tmux detaches with prefix+d; herdr uses prefix+q by default.
+detach = "prefix+d"
+
+# tmux splits: % opens a pane to the right, " opens one below.
+split_vertical = "prefix+%"
+split_horizontal = "prefix+\""
+
+# These already match tmux, and stay at the herdr default:
+#   focus_pane_left/down/up/right = prefix+h/j/k/l
+#   zoom = prefix+z          close_pane = prefix+x
+#   new_tab = prefix+c       next_tab = prefix+n, previous_tab = prefix+p
+#   switch_tab = prefix+1..9 edit_scrollback = prefix+e
+#
+# ctrl+hjkl pane moves, the vim-tmux-navigator behaviour. herdr has no such
+# feature, so these call the vim-herdr-navigation plugin, which install.sh
+# installs. It forwards the chord when the pane runs an editor, and moves the
+# herdr focus otherwise. The nvim half lives in nvim/lua/plugins/navigate.lua.
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "vim-herdr-navigation.left"
+description = "navigate left (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "vim-herdr-navigation.down"
+description = "navigate down (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "vim-herdr-navigation.up"
+description = "navigate up (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "vim-herdr-navigation.right"
+description = "navigate right (nvim/herdr)"
+
+# tmux binds prefix+g to lazygit in a new window. A popup is the closest fit.
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+width = "80%"
+height = "80%"
+
+# tmux binds prefix+E to nvim in a new window. A temporary pane closes on exit.
+[[keys.command]]
+key = "prefix+shift+e"
+type = "pane"
+command = "nvim"
+
+[ui]
+# tmux paints the active pane border and the current window tab magenta.
+accent = "magenta"
+
+# tmux keeps its status line at the top.
+tab_bar_position = "top"
+
+# tmux-style splitters: shared dividers, and no frame around the pane area.
+pane_outer_borders = false
+pane_gaps = false
+
+# tmux creates a window at once on prefix+c, with no name prompt.
+prompt_new_tab_name = false
