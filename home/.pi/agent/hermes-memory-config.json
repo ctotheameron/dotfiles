@@ -1,0 +1,8 @@
+{
+  "memoryCharLimit": 20000,
+  "userCharLimit": 20000,
+  "projectCharLimit": 20000,
+  "llmModelOverride": "anthropic/claude-haiku-4-5",
+  "reviewRecentMessages": 40,
+  "flushRecentMessages": 40
+}
