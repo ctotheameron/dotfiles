@@ -1,9 +1,10 @@
 [user]
 	name = Cameron Austgen
 	email = 3002968+ctotheameron@users.noreply.github.com
-	# Public half of the personal signing key; private key lives in the
-	# Bitwarden SSH agent (SSH_AUTH_SOCK exported in zsh/ssh.zsh)
-	signingkey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHCBui/24dzwhRwbgQ0p0aUrwji0Lf6KhNSRDx8x03Q
+	# Public half of the signing key; the private half lives in the 1Password
+	# SSH agent (SSH_AUTH_SOCK exported in zsh/ssh.zsh). GitHub holds it as the
+	# signing key "caustgen@angellist.com".
+	signingkey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICg/0ffK+FqNCt5rIA+0XTYZ7s52ZfSDp58JVtYCe2Ts
 
 [gpg]
 	format = ssh
@@ -12,8 +13,8 @@
 	allowedSignersFile = ~/.config/git/allowed_signers
 
 [commit]
-	# TODO: flip to true once 1Password SSH agent + signing keys are set up
-	gpgsign = false
+	# Sign every commit with the key above, through the 1Password agent.
+	gpgsign = true
 
 # Machine-local overrides (untracked; optional). Work identity, work-org
 # includeIf/insteadOf rules, etc. live here — keep them out of this repo.

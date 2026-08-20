@@ -1,3 +1,8 @@
 # SSH allowed signers — used by git to verify ssh-signed commits
 # (gpg.ssh.allowedSignersFile). Public keys only.
+# 1Password agent key (GitHub signing key "caustgen@angellist.com").
+3002968+ctotheameron@users.noreply.github.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICg/0ffK+FqNCt5rIA+0XTYZ7s52ZfSDp58JVtYCe2Ts
+caustgen@angellist.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICg/0ffK+FqNCt5rIA+0XTYZ7s52ZfSDp58JVtYCe2Ts
+
+# Old Bitwarden personal key; kept so old signed commits still verify.
 3002968+ctotheameron@users.noreply.github.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHCBui/24dzwhRwbgQ0p0aUrwji0Lf6KhNSRDx8x03Q
