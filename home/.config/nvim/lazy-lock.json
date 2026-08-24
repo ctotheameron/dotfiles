@@ -2,7 +2,7 @@
   "LazyVim": { "branch": "main", "commit": "c10948c50b18fae7f256433afdef09e432410480" },
   "SchemaStore.nvim": { "branch": "main", "commit": "73e89eb3e536a4dd8f991c963bd37189520c9919" },
   "async.nvim": { "branch": "main", "commit": "99aed904ae1253c27fac60b862b6d73ef1380e54" },
-  "biome-lint.nvim": { "branch": "fix/biome-2-json-format", "commit": "0595a60a5a67ea4dd38c168e707b698262eb890a" },
+  "biome-lint.nvim": { "branch": "main", "commit": "394f234b253258182f6084fd5891d42508f899f1" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "bufferline.nvim": { "branch": "main", "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3" },
   "catppuccin": { "branch": "main", "commit": "edefef779ab08ce1a4a404713e3012b0d202bd35" },
