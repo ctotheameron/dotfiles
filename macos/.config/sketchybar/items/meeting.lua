@@ -81,7 +81,9 @@ local function update()
 
     meeting:set({
       drawing = true,
-      label = { string = trim_title(title, 28) .. " " .. when },
+      -- 20 keeps icon + title + " at HH:MM" right of the notch on the
+      -- built-in display, with margin for wider widget labels (e.g. 100%).
+      label = { string = trim_title(title, 20) .. " " .. when },
       icon = { color = mins <= 5 and colors.red or colors.yellow },
     })
   end)
