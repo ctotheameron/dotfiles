@@ -8,3 +8,5 @@ sesh-bin
 opencode-bin
 graphite-cli
 1password-cli
+# linear-tui (Linear TUI client) has no AUR package. Install on Arch with:
+#   go install github.com/roeyazroel/linear-tui/cmd/linear-tui@latest
