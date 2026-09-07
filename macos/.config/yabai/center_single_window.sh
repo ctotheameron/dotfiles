@@ -5,8 +5,12 @@
 # matches one pane of a two-pane split, centered on the screen.
 # Spaces with more tiled windows return to the default padding.
 #
+# A "nocenter_*" space label suspends the centering on that space.
+# toggle_fullscreen.sh (alt-f) sets the label, because yabai zoom cannot
+# grow a window past the space padding.
+#
 # Signals in yabairc run this script on window and space changes.
-# skhd also runs it after float toggles, because those fire no signal.
+# skhd also runs it after float and fullscreen toggles, which fire no signal.
 
 set -euo pipefail
 
@@ -26,6 +30,7 @@ yabai -m query --spaces | jq -c '.[]' | while read -r space; do
   [ "$(jq '.["is-native-fullscreen"]' <<<"$space")" = "true" ] && continue
   idx=$(jq '.index' <<<"$space")
   didx=$(jq '.display' <<<"$space")
+  label=$(jq -r '.label' <<<"$space")
 
   # Count the tiled windows on this space.
   count=$(jq --argjson s "$idx" \
@@ -34,7 +39,14 @@ yabai -m query --spaces | jq -c '.[]' | while read -r space; do
                    and .["is-minimized"] == false
                    and .["is-hidden"] == false)] | length' <<<"$windows")
 
-  if [ "$count" -eq 1 ]; then
+  # The fullscreen label only applies to a lone window. Clear it when
+  # the window count changes, so the next lone window centers again.
+  if [ "$count" -ne 1 ] && [[ "$label" == nocenter* ]]; then
+    yabai -m space "$idx" --label ""
+    label=""
+  fi
+
+  if [ "$count" -eq 1 ] && [[ "$label" != nocenter* ]]; then
     screen_w=$(jq --argjson d "$didx" '.[] | select(.index == $d) | .frame.w' <<<"$displays")
     # Pane width in a two-pane split: (screen - left - right - gap) / 2.
     # Side padding that centers a window of that width:

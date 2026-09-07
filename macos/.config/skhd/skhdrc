@@ -24,7 +24,8 @@ shift + alt + ctrl - l : yabai -m window --warp east
 alt - r : yabai -m space --rotate 90
 
 # toggle window fullscreen zoom
-alt - f : yabai -m window --toggle zoom-fullscreen
+# (on a lone centered window, the script lifts the centering instead)
+alt - f : $HOME/.config/yabai/toggle_fullscreen.sh
 
 # toggle padding and gap
 alt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
