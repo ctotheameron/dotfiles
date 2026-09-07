@@ -49,4 +49,16 @@ yabai -m rule --add label="Select file to save to" app="^Inkscape$" title="Selec
 
 yabai -m config layout bsp
 
+# Center a lone tiled window (Omarchy style): one tiled window on a space
+# sits centered, as wide as one pane of a two-pane split.
+# The script adjusts space padding whenever windows or spaces change.
+center_single="$HOME/.config/yabai/center_single_window.sh"
+for event in window_created window_destroyed window_resized window_moved \
+    window_minimized window_deminimized application_hidden application_visible \
+    application_terminated space_changed space_created space_destroyed \
+    display_added display_removed display_changed; do
+  yabai -m signal --add label="center_single_${event}" event="$event" action="$center_single"
+done
+"$center_single"
+
 echo "yabai configuration loaded.."
