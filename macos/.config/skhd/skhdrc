@@ -108,8 +108,12 @@ shift + alt - b : pgrep -x borders && pkill -x borders || borders &
 
 # app launchers, from the omarchy bindings
 # open a new ghostty window (omarchy: super+return)
-alt - return : open -na Ghostty
+# (the quit flag stops headless instances from piling up after close)
+alt - return : open -na Ghostty --args --quit-after-last-window-closed=true --window-save-state=never
 
 # open a new safari window (omarchy: super+shift+return)
 shift + alt - return : open -na Safari
+
+# open linear-tui as a standalone-feeling app (persistent tmux session)
+ctrl + alt - l : $HOME/.config/skhd/linear_app.sh
 
