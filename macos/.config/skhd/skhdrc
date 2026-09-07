@@ -106,3 +106,10 @@ shift + alt - space : sketchybar --bar hidden=toggle
 # Toggle borders
 shift + alt - b : pgrep -x borders && pkill -x borders || borders &
 
+# app launchers, from the omarchy bindings
+# open a new ghostty window (omarchy: super+return)
+alt - return : open -na Ghostty
+
+# open a new safari window (omarchy: super+shift+return)
+shift + alt - return : open -na Safari
+
