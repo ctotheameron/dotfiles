@@ -19,6 +19,7 @@ packages/Brewfile   macOS packages (brew bundle)
 packages/arch.txt   Arch official repo packages (pacman)
 packages/aur.txt    Arch AUR packages (yay/paru)
 scripts/            maintenance helpers (e.g. export-btt.sh)
+tests/              shell tests for scripts in home/.local/bin (bash tests/<name>.sh)
 macos/btt/          BetterTouchTool preset exports (JSON, not stowed)
 install.sh          bootstrap: detects OS, installs packages, stows, post-setup
 .stowrc             makes plain `stow home` target $HOME
@@ -100,6 +101,8 @@ Match the verification to what changed:
 - nvim: headless checks (`nvim --headless -c ... -c q`).
 - stow: after adding files at new paths, `stow --restow home` and `ls -la`
   the target to confirm the symlink.
+- scripts in `home/.local/bin`: `shellcheck` the script, then run its
+  `tests/<name>.sh` when one exists.
 
 ### 6. Established conventions to follow
 

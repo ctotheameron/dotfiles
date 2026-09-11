@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Show recent sessions first. Keep generated pi sessions at the bottom.
+
+set -euo pipefail
+
+list_sessions() {
+  local format
+  format='#{session_id}'$'\t''#{session_last_attached}'$'\t''#{session_created}'$'\t''#{session_name}'
+
+  # Order sessions by last attachment, not background output.
+  # Use creation time until a client first attaches.
+  tmux -S "$1" list-sessions -F "$format" |
+    awk -F '\t' 'BEGIN { OFS = FS }
+      {
+        recent = $2 > 0 ? $2 : $3
+        pi = $4 ~ /^pi [[:xdigit:]]+$/
+        print pi, recent, $1, $4
+      }' |
+    LC_ALL=C sort -t $'\t' -k1,1n -k2,2nr -k4,4 -k3,3 |
+    cut -f3-
+}
+
+if [[ ${1:-} == --list && $# == 2 ]]; then
+  list_sessions "$2"
+  exit
+fi
+
+if [[ $# != 2 ]]; then
+  printf '%s\n' 'Usage: tmux-session-picker SOCKET CLIENT' >&2
+  printf '%s\n' '       tmux-session-picker --list SOCKET' >&2
+  exit 2
+fi
+
+if ! command -v tmux >/dev/null || ! command -v fzf >/dev/null; then
+  printf '%s\n' 'The session picker needs tmux and fzf.' >&2
+  exit 1
+fi
+
+socket=$1
+client=$2
+export TMUX_SESSION_PICKER_SOCKET="$socket"
+
+# Keep names as display text. Use IDs for tmux targets.
+# fzf expands the preview variable, not this shell.
+# shellcheck disable=SC2016
+if selected=$(list_sessions "$socket" | fzf \
+  --no-sort --no-multi --layout=reverse --height=100% --border=none \
+  --delimiter=$'\t' --with-nth=2.. \
+  --prompt='Session > ' --header='Most recent first. Pi sessions last.' \
+  --bind='tab:down,btab:up' \
+  --preview='tmux -S "$TMUX_SESSION_PICKER_SOCKET" capture-pane -ep -t {1}: 2>/dev/null' \
+  --preview-window='down,60%,border-top'); then
+  session_id=${selected%%$'\t'*}
+  [[ $session_id =~ ^\$[0-9]+$ ]] || exit 1
+  # Switch only the client that opened this list.
+  tmux -S "$socket" switch-client -c "$client" -t "$session_id"
+else
+  status=$?
+  case "$status" in
+    1 | 130) exit 0 ;;
+    *) exit "$status" ;;
+  esac
+fi

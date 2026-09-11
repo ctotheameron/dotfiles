@@ -25,6 +25,7 @@ packages/Brewfile  macOS packages (brew bundle dump)
 packages/arch.txt  Arch official repo packages
 packages/aur.txt   AUR packages
 install.sh         bootstrap script
+tests/             shell tests for scripts in home/.local/bin (run with bash)
 ```
 
 ## One-time auth on a new machine
