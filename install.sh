@@ -318,14 +318,8 @@ main() {
   # Build bat's theme cache so custom themes (Catppuccin) are available
   command -v bat >/dev/null && bat cache --build >/dev/null
 
-  # macOS: expose the 1Password SSH agent at the same path Linux uses,
-  # so ~/.ssh/config works on both (requires SSH agent enabled in the app)
   if [ "$(detect_os)" = "macos" ]; then
     start_wm_services
-
-    mkdir -p "$HOME/.1password"
-    ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" \
-      "$HOME/.1password/agent.sock"
 
     mkdir -p "$HOME/Projects"
 

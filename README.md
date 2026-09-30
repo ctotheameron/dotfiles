@@ -33,6 +33,8 @@ Secrets are never tracked, so after `install.sh` run:
 
 - `gh auth login` — GitHub CLI (token lives in `~/.config/gh/hosts.yml`)
 - `gt auth` — Graphite (token lives in `~/.config/graphite/user_config`)
+- Bitwarden app → log in, then Settings → turn on the SSH agent. SSH auth
+  and git commit signing read this agent (keys live in the vault)
 - 1Password app → Settings → Developer → "Integrate with 1Password CLI",
   then `op plugin init <tool>` for any shell plugins you want
 - `atuin import auto` — seed shell history (optionally `atuin login` for sync)

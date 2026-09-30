@@ -178,6 +178,17 @@ return {
         exclude = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
       },
       servers = {
+        biome = {
+          -- Copilot, vtsls and graphql use UTF-16 offsets. Advertise only
+          -- UTF-16 so all clients on a buffer agree (checkhealth warning).
+          capabilities = { general = { positionEncodings = { "utf-16" } } },
+        },
+        graphql = {
+          -- mason-lspconfig auto-enables every installed server. With no
+          -- graphql config file in the project it attaches rootless, and
+          -- every didClose then fails. Start it only where a config exists.
+          workspace_required = true,
+        },
         lua_ls = {
           Lua = {
             workspace = { checkThirdParty = false },
@@ -187,8 +198,27 @@ return {
         marksman = {},
         ruby_lsp = {
           root_markers = { "Gemfile", ".git" },
+          -- The standalone rubocop server below owns RuboCop diagnostics.
+          -- An empty list stops Ruby LSP from running RuboCop too, which
+          -- doubled every offense.
+          init_options = { linters = {} },
+          -- Sorbet, rubocop and copilot use UTF-16 offsets. Advertise only
+          -- UTF-16 so all clients on a buffer agree (checkhealth warning).
+          capabilities = { general = { positionEncodings = { "utf-16" } } },
         },
-        sorbet = {},
+        sorbet = {
+          -- The Gemfile pins sorbet. A bare `srb` resolves to Mason's newer
+          -- build, which disagrees with the checked-in RBIs (venture).
+          cmd = { "bundle", "exec", "srb", "typecheck", "--lsp" },
+          -- Start only in projects that use Sorbet. Sorbet also needs
+          -- watchman on PATH (brew install watchman) or it exits at boot.
+          root_dir = function(bufnr, on_dir)
+            local root = vim.fs.root(bufnr, "Gemfile")
+            if root and vim.uv.fs_stat(root .. "/sorbet/config") then
+              on_dir(root)
+            end
+          end,
+        },
         rubocop = {
           -- See: https://docs.rubocop.org/rubocop/usage/lsp.html
           cmd = { "bundle", "exec", "rubocop", "--lsp" },

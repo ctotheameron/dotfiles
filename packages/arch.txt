@@ -23,6 +23,8 @@ rbw
 atuin
 aws-cli
 bat
+# Bitwarden desktop serves SSH keys (auth + git signing) via its agent
+bitwarden
 btop
 direnv
 eza
