@@ -33,6 +33,10 @@ gui:
   commitLength:
     show: true
 git:
+  # No background fetch: every fetch opens SSH to GitHub and asks the
+  # Bitwarden agent for an approval. Unattended fetches stack approval
+  # dialogs (for example after sleep). Press `f` to fetch on demand.
+  autoFetch: false
   diffRenderers:
     - colorArg: always
       command: delta --dark --paging=never --side-by-side
