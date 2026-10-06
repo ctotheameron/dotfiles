@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.0.2",
+  "lastChangelogVersion": "1.0.4",
   "theme": "catppuccin-tui-mocha",
   "packages": [
     "npm:pi-claude-auth",
@@ -15,8 +15,6 @@
     "npm:pi-thinking-box",
     "npm:pi-catppuccin-tui",
     "npm:@petechu/pi-extension-toggle",
-    "npm:agent-ste",
-    "npm:pi-figma-mcp",
     "npm:@dietrichgebert/ponytail"
   ],
   "defaultThinkingLevel": "max",
