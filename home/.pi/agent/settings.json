@@ -1,9 +1,8 @@
 {
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "1.0.2",
   "theme": "catppuccin-tui-mocha",
   "packages": [
     "npm:pi-claude-auth",
-    "npm:pi-mcp-adapter",
     "npm:pi-subagents",
     "npm:@hypabolic/pi-hypa",
     "npm:pi-tool-display",
@@ -27,5 +26,18 @@
     "anthropicExtraUsage": false
   },
   "quietStartup": true,
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "compaction": {
+    "modelOverrides": {
+      "anthropic/claude-fable-5": {
+        "reserveTokens": 65536
+      },
+      "anthropic/claude-fable-5-1": {
+        "reserveTokens": 65536
+      },
+      "anthropic/claude-opus-5-5": {
+        "reserveTokens": 65536
+      }
+    }
+  }
 }
