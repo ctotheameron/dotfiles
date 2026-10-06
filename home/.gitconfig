@@ -1,10 +1,12 @@
 [user]
 	name = Cameron Austgen
 	email = 3002968+ctotheameron@users.noreply.github.com
-	# Public half of the signing key; the private half lives in the Bitwarden
-	# SSH agent (SSH_AUTH_SOCK exported in zsh/ssh.zsh). GitHub holds it as the
-	# signing key "Bitwarden personal signing".
-	signingkey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHCBui/24dzwhRwbgQ0p0aUrwji0Lf6KhNSRDx8x03Q
+	# Signing-only key file on disk (private half: ~/.ssh/github_signing).
+	# GitHub holds the public half as a "Signing Key". Login keys stay in the
+	# Bitwarden agent; signing skips the agent on purpose — the agent shows one
+	# approval popup per signature, which means one popup per rewritten commit
+	# on every rebase/restack.
+	signingkey = ~/.ssh/github_signing.pub
 
 [gpg]
 	format = ssh
@@ -13,7 +15,7 @@
 	allowedSignersFile = ~/.config/git/allowed_signers
 
 [commit]
-	# Sign every commit with the key above, through the Bitwarden agent.
+	# Sign every commit with the key file above. No agent is involved.
 	gpgsign = true
 
 # Machine-local overrides (untracked; optional). Work identity, work-org
